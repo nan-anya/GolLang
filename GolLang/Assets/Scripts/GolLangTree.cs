@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GolLangTree : MonoBehaviour
+public class GolLangTree
 {
     public GolLangNode head;
+
+    public GolLangTree()
+    {
+        head = null;
+    }
 }

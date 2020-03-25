@@ -10,6 +10,10 @@ public class GolLangLine : MonoBehaviour
     {
         keywords = new List<GolLangKeyword>();
     }
+    public GolLangLine(List<GolLangKeyword> keywords)
+    {
+        keywords = new List<GolLangKeyword>(keywords);
+    }
 
     public void excuteLine()
     {

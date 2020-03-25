@@ -4,14 +4,29 @@ using UnityEngine;
 
 public class GolLangKeyword : MonoBehaviour
 {
-    public Keyword keyword;
-    public string name;//변수라면 이름
+    public GKeyword keyword;
+    public string name;//변수라면 이름, 상수라면 값
+
+    public GolLangKeyword(GKeyword keyword)
+    {
+        this.keyword = keyword;
+
+        this.name = "";
+    }
+    public GolLangKeyword(GKeyword keyword, string name)
+    {
+        this.keyword = keyword;
+
+        this.name = name;
+    }
 }
 
-public enum Keyword
+public enum GKeyword
 {
+    //META
+    STARTHERE,
     //Data
-    VARI, VARB, ARRI, ARRB, CONSTANT,
+    VARI, VARB, ARRI, ARRB, CONSTI, CONSTB,
     //Control
     FOR, IF, ELIF, ELSE,
     //Compare
