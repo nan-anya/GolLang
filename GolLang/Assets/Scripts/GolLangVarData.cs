@@ -6,5 +6,5 @@ public class GolLangVarData : MonoBehaviour
 {
     public string name;
 
-    public int value;
+    public string value;
 }

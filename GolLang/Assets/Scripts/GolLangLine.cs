@@ -2,22 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GolLangLine : MonoBehaviour
+public class GolLangLine
 {
     public List<GolLangKeyword> keywords;
 
     public GolLangLine()
     {
-        keywords = new List<GolLangKeyword>();
+        this.keywords = new List<GolLangKeyword>();
     }
     public GolLangLine(List<GolLangKeyword> keywords)
     {
-        keywords = new List<GolLangKeyword>(keywords);
-    }
-
-    public void excuteLine()
-    {
-        print(this.ToString());
+        this.keywords = new List<GolLangKeyword>(keywords);
     }
 
     override public string ToString()
