@@ -9,6 +9,10 @@ public class GolLangInterpreter : MonoBehaviour
     public List<GolLangVarData> vars;
 
     public TestInit testi = new TestInit();
+    public GolLangInterpreter()
+    { 
+    
+    }
 
     void Start()
     {
@@ -26,7 +30,7 @@ public class GolLangInterpreter : MonoBehaviour
             {
                 now.isVisited = true;
 
-                print(now.excute());
+                
             }
 
             GolLangNode temp = now.getFirstUnvisitedChild();
@@ -63,7 +67,11 @@ public class GolLangInterpreter : MonoBehaviour
     //문법이 맞는 줄이 들어오는 것을 전제로 한다.
     public lineKind lineCheck(GolLangLine line)
     {
-        if (line.keywords[0].keyword == GKeyword.FOR)
+        if (line.keywords[0].keyword == GKeyword.STARTHERE)
+        {
+            return lineKind.STARTHERE;
+        }
+        else if (line.keywords[0].keyword == GKeyword.FOR)
         {
             return lineKind.FOR;
         }
@@ -85,10 +93,27 @@ public class GolLangInterpreter : MonoBehaviour
     //FOR, IF 다음에는 조건이 와야한다.
     //조건은 단독으로 있을 수 없다.
     //실행문은 함수가 있거나 할당연산자가 있어야한다.
-    public enum lineKind {FOR, IF, ELSE, ELIF, EXE, UNKNOWN}
+    public enum lineKind {STARTHERE, FOR, IF, ELSE, ELIF, EXE, UNKNOWN}
 
-    public void excuteLine()
+    public void excuteLine(GolLangNode node)
+    {
+       
+    }
+
+    public GolLangParseTree parse(GolLangLine line)
     { 
         
+    }
+
+    private int lowestPriority(List<GolLangKeyword> keywords)
+    {
+        for(int i = 0; i > keywords.Count; i++)
+        {
+            if()
+
+        }
+
+
+        return -1;
     }
 }

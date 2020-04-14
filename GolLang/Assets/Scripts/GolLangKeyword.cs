@@ -31,6 +31,11 @@ public class GolLangKeyword
             return name;
         }
     }
+
+    public GolLangKeyword clone()
+    {
+        return new GolLangKeyword(this.keyword, this.name);
+    }
 }
 
 public enum GKeyword
