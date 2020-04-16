@@ -101,19 +101,116 @@ public class GolLangInterpreter : MonoBehaviour
     }
 
     public GolLangParseTree parse(GolLangLine line)
-    { 
-        
+    {
+        GolLangParseTree parseTree = new GolLangParseTree();
+
     }
 
-    private int lowestPriority(List<GolLangKeyword> keywords)
+    private int lowestPriorityOperator(List<GolLangKeyword> keywords)
     {
+        List<int> exclude = new List<int>();
+
+        int bracketCount = 0;
+
+        for (int i = 0; i > keywords.Count; i++)
+        {
+            // 여는 괄호 제외
+            if (keywords[i].keyword == GKeyword.BOP)
+            {
+                bracketCount++;
+                exclude.Add(i);
+            }
+            //닫는 괄호 제외
+            else if (keywords[i].keyword == GKeyword.BCL)
+            {
+                bracketCount--;
+                exclude.Add(i);
+            }
+            //괄호안에 있는 것들 제외
+            else if (bracketCount != 0)
+            {
+                exclude.Add(i);
+            }
+            //콤마 제외
+            else if (keywords[i].keyword == GKeyword.COMMA)
+            {
+                exclude.Add(i);
+            }
+            //피연산자 제외
+            else if (keywords[i].keyword == GKeyword.VARI ||
+                     keywords[i].keyword == GKeyword.VARB ||
+                     keywords[i].keyword == GKeyword.ARRI ||
+                     keywords[i].keyword == GKeyword.ARRB ||
+                     keywords[i].keyword == GKeyword.CONSTI ||
+                     keywords[i].keyword == GKeyword.CONSTB)
+            {
+                exclude.Add(i);
+            }
+        }
+
         for(int i = 0; i > keywords.Count; i++)
         {
-            if()
+
+
+            // =
+            if (keywords[i].keyword == GKeyword.ASS)
+            {
+                return i;
+            }
+            // ||
+            else if (keywords[i].keyword == GKeyword.OR)
+            {
+                return i;
+            }
+            // &&
+            else if (keywords[i].keyword == GKeyword.AND)
+            {
+                return i;
+            }
+            // !=, ==, >=, <=, <, >
+            else if (keywords[i].keyword == GKeyword.EQ ||
+                     keywords[i].keyword == GKeyword.NEQ ||
+                     keywords[i].keyword == GKeyword.BT ||
+                     keywords[i].keyword == GKeyword.LT ||
+                     keywords[i].keyword == GKeyword.BE ||
+                     keywords[i].keyword == GKeyword.LE)
+            {
+                return i;
+            }
+            // +, -
+            else if (keywords[i].keyword == GKeyword.PLUS ||
+                     keywords[i].keyword == GKeyword.MINUS)
+            {
+                return i;
+            }
+            // *, /, %
+            else if (keywords[i].keyword == GKeyword.MUL ||
+                     keywords[i].keyword == GKeyword.DIV ||
+                     keywords[i].keyword == GKeyword.MOD)
+            {
+                return i;
+            }
+            // -(음수)
+            else if (keywords[i].keyword == GKeyword.NEG)
+            {
+                return i;
+            }
+            // !
+            else if (keywords[i].keyword == GKeyword.NOT)
+            {
+                return i;
+            }
+            // 함수
+            else if (keywords[i].keyword == GKeyword.FUNC)
+            {
+                return i;
+            }
 
         }
 
 
         return -1;
     }
+
+    
 }

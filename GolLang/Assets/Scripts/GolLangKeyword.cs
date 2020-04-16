@@ -44,16 +44,20 @@ public enum GKeyword
     STARTHERE,
     //Data1
     VARI, VARB, ARRI, ARRB, CONSTI, CONSTB,
-    //Data2
-    BLOCK1, BLOCK2,
     //Control
     FOR, IF, ELIF, ELSE,
     //Compare
-    EQ, BT, LT, BE, LE,
+    EQ, NEQ, BT, LT, BE, LE,
     //Calculate
     PLUS, MINUS, MUL, DIV, MOD,
+    //Negative Num
+    NEG,
+    //Logical
+    AND, OR, NOT,
+    //Bracket
+    BOP, BCL,
     //Assignment
-    ASS, PLUSONE, MINUSONE,
+    ASS, //PLUSONE, MINUSONE,
     //Function
     FUNC,
     //ETC
