@@ -202,4 +202,35 @@ public class GolLangLine
 
         return temp;
     }
+
+    public GolLangLine clone()
+    {
+        return new GolLangLine(this.keywords);
+    }
+
+    public List<GolLangKeyword> extract(int from, int to)
+    {
+        if (from < 0)
+        {
+            return null;
+        }
+        else if (keywords.Count <= to)
+        {
+            return null;
+        }
+        else if (from >= to)
+        {
+            return null;
+        }
+
+        List<GolLangKeyword> temp = new List<GolLangKeyword>();
+
+        for (int i = to - 1; i >= from; i--)
+        {
+            temp.Add(keywords[i]);
+            keywords.RemoveAt(i);
+        }
+
+        return temp;
+    }
 }

@@ -63,3 +63,8 @@ public enum GKeyword
     //ETC
     COMMA
 }
+
+public enum ValueType
+{
+    ONEI, ONEB, ARRI, ARRB, VOID
+}

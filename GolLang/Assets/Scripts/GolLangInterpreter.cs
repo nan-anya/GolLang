@@ -8,17 +8,42 @@ public class GolLangInterpreter : MonoBehaviour
     
     public List<GolLangVarData> vars;
 
-    public TestInit testi = new TestInit();
+    public List<GolLangFunctionDescription> functions;
+
     public GolLangInterpreter()
     { 
-    
+        
     }
 
     void Start()
     {
-        interpret();
+        vars = new List<GolLangVarData>();
+        functions = new List<GolLangFunctionDescription>();
+
+        test();
     }
 
+    void test()
+    {
+        functions.Add(new GolLangFunctionDescription("F1", new List<ValueType>(new ValueType[] { ValueType.ONEI, ValueType.ONEI }), ValueType.ONEI));
+        functions.Add(new GolLangFunctionDescription("F2", new List<ValueType>(new ValueType[] { ValueType.ONEI, ValueType.ONEI }), ValueType.ONEI));
+        functions.Add(new GolLangFunctionDescription("F3", new List<ValueType>(new ValueType[] { ValueType.ONEI, ValueType.ONEI }), ValueType.ONEI));
+        functions.Add(new GolLangFunctionDescription("F4", new List<ValueType>(new ValueType[] { ValueType.ONEI}), ValueType.ONEI));
+
+        List<GolLangKeyword> gl = new List<GolLangKeyword>();
+
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "i"));
+        gl.Add(new GolLangKeyword(GKeyword.ASS));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "a"));
+        gl.Add(new GolLangKeyword(GKeyword.PLUS));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "b"));
+
+        GolLangLine line = new GolLangLine(gl);
+
+        GolLangParseTree t = parse(line);
+
+        print(t);
+    }
 
     public void preorderTraversal()
     {
@@ -28,9 +53,7 @@ public class GolLangInterpreter : MonoBehaviour
         {
             if (!now.isVisited)
             {
-                now.isVisited = true;
-
-                
+                now.isVisited = true;      
             }
 
             GolLangNode temp = now.getFirstUnvisitedChild();
@@ -57,11 +80,7 @@ public class GolLangInterpreter : MonoBehaviour
    
     public void interpret()
     {
-        testi.init();
 
-        gTree = testi.gT;
-
-        preorderTraversal();
     }
 
     //문법이 맞는 줄이 들어오는 것을 전제로 한다.
@@ -102,8 +121,11 @@ public class GolLangInterpreter : MonoBehaviour
 
     public GolLangParseTree parse(GolLangLine line)
     {
-        GolLangParseTree parseTree = new GolLangParseTree();
+        GolLangParseTree parseTree = new GolLangParseTree(new GolLangParseNode(line));
 
+        spliteNode(parseTree.head);
+
+        return parseTree;
     }
 
     private int lowestPriorityOperator(List<GolLangKeyword> keywords)
@@ -112,7 +134,7 @@ public class GolLangInterpreter : MonoBehaviour
 
         int bracketCount = 0;
 
-        for (int i = 0; i > keywords.Count; i++)
+        for (int i = 0; i < keywords.Count; i++)
         {
             // 여는 괄호 제외
             if (keywords[i].keyword == GKeyword.BOP)
@@ -148,9 +170,14 @@ public class GolLangInterpreter : MonoBehaviour
             }
         }
 
-        for(int i = 0; i > keywords.Count; i++)
-        {
 
+
+        for(int i = 0; i < keywords.Count; i++)
+        {
+            if (exclude.Contains(i))
+            {
+                continue;
+            }
 
             // =
             if (keywords[i].keyword == GKeyword.ASS)
@@ -208,9 +235,88 @@ public class GolLangInterpreter : MonoBehaviour
 
         }
 
-
         return -1;
     }
 
-    
+    private void spliteNode(GolLangParseNode node)
+    {
+        int lpo = lowestPriorityOperator(node.line.keywords);
+
+        if (lpo == -1)
+        {
+            return;
+        }
+
+        //함수( 피연산자, 피연산자, ....)
+        if (node.line.keywords[lpo].keyword == GKeyword.FUNC)
+        {
+            List<GolLangParseNode> tempL = new List<GolLangParseNode>();
+
+            List<GolLangKeyword> keywords = new List<GolLangKeyword>();
+
+            int from = 1;
+            int to = 0;
+
+            for (int i = 2; i < node.line.keywords.Count-2; i++)
+            {
+                if (node.line.keywords[i].keyword != GKeyword.COMMA)
+                {
+                    keywords.Add(node.line.keywords[i]);
+                }
+                else
+                {
+                    tempL.Add(new GolLangParseNode(new GolLangLine(keywords)));
+                    keywords.Clear();
+                }
+            }
+
+            tempL.Add(new GolLangParseNode(new GolLangLine(keywords)));
+
+            node.line.keywords = new List<GolLangKeyword>(new GolLangKeyword[]{node.line.keywords[0]});
+
+            foreach (GolLangParseNode i in tempL)
+            {
+                node.addChild(i);
+            }
+        }
+        //연산자 피연산자
+        else if (node.line.keywords[lpo].keyword == GKeyword.NEG ||
+                 node.line.keywords[lpo].keyword == GKeyword.NOT)
+        {
+            GolLangParseNode tempN = new GolLangParseNode(new GolLangLine(node.line.extract(lpo + 1, node.line.keywords.Count - 1)));
+
+            node.addChild(tempN);
+        }
+        //피연산자 연산자 피연산자
+        else
+        {
+            GolLangParseNode rNode = new GolLangParseNode(new GolLangLine(node.line.extract(lpo + 1, node.line.keywords.Count - 1)));
+
+            GolLangParseNode lNode = new GolLangParseNode(new GolLangLine(node.line.extract(0, lpo)));
+
+            node.addChild(lNode);
+            node.addChild(rNode);
+        }
+
+        foreach (GolLangParseNode i in node.children)
+        {
+            spliteNode(i);
+        }
+    }
+}
+
+public class GolLangFunctionDescription
+{
+    string functionName;
+
+    List<ValueType> operands;
+
+    ValueType returnType;
+
+    public GolLangFunctionDescription(string functionName, List<ValueType> operands, ValueType returnType)
+    {
+        this.functionName = functionName;
+        this.operands = new List<ValueType>(operands);
+        this.returnType = returnType;
+    }
 }

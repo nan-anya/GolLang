@@ -48,7 +48,7 @@ public class TestInit
         tempGLK.Clear();
 
         tempGLK.Add(new GolLangKeyword(GKeyword.FUNC, "create"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.BLOCK1));
+        //tempGLK.Add(new GolLangKeyword(GKeyword.BLOCK1));
 
         gT.head.children[0].children[0].children[0].addChild(new GolLangNode(new GolLangLine(tempGLK)));
 
@@ -62,7 +62,7 @@ public class TestInit
         tempGLK.Clear();
 
         tempGLK.Add(new GolLangKeyword(GKeyword.FUNC, "create"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.BLOCK2));
+        //tempGLK.Add(new GolLangKeyword(GKeyword.BLOCK2));
 
         gT.head.children[0].children[0].children[1].addChild(new GolLangNode(new GolLangLine(tempGLK)));
 

@@ -14,6 +14,11 @@ public class GolLangParseTree : IEnumerable
         head = null;
     }
 
+    public GolLangParseTree(GolLangParseNode head)
+    {
+        this.head = head;
+    }
+
     public void reset()
     {
         head.unvisite();
@@ -58,7 +63,7 @@ public class GolLangParseTree : IEnumerable
 
 public class GolLangParseNode
 {
-    public GolLangKeyword keyword;
+    public GolLangLine line;
 
     public GolLangParseNode parents;
 
@@ -70,9 +75,9 @@ public class GolLangParseNode
 
     public bool isVisited;
 
-    public GolLangParseNode(GolLangKeyword keyword)
+    public GolLangParseNode(GolLangLine keywords)
     {
-        this.keyword = keyword.clone();
+        this.line = keywords.clone();
 
         parents = null;
 
@@ -87,7 +92,7 @@ public class GolLangParseNode
 
     public override string ToString()
     {
-        return keyword.ToString();
+        return line.ToString();
     }
 
     public void addChild(GolLangParseNode child)
