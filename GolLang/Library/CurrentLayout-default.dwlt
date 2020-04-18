@@ -21,7 +21,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 875, y: 300}
+  m_MinSize: {x: 875, y: 492}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -46,7 +46,7 @@ MonoBehaviour:
     y: 0
     width: 1680
     height: 967
-  m_MinSize: {x: 875, y: 300}
+  m_MinSize: {x: 875, y: 492}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &3
 MonoBehaviour:
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_MinSize: {x: 911, y: 442}
   m_MaxSize: {x: 22006, y: 10021}
   vertical: 0
-  controlID: 210
+  controlID: 40
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -194,7 +194,7 @@ MonoBehaviour:
   m_MinSize: {x: 202, y: 442}
   m_MaxSize: {x: 4002, y: 8042}
   vertical: 1
-  controlID: 211
+  controlID: 160
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -271,7 +271,7 @@ MonoBehaviour:
   m_MinSize: {x: 276, y: 192}
   m_MaxSize: {x: 4001, y: 8042}
   vertical: 1
-  controlID: 119
+  controlID: 41
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -451,8 +451,7 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SkipHidden: 0
     m_SearchArea: 1
-    m_Folders:
-    - Assets/Textures
+    m_Folders: []
   m_ViewMode: 0
   m_StartGridSize: 64
   m_LastFolders:
@@ -465,7 +464,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 78390000
     m_LastClickedID: 14712
-    m_ExpandedIDs: 000000003c3a00003e3a0000403a0000423a0000443a0000463a0000483a00004a3a00004c3a00004e3a0000
+    m_ExpandedIDs: 00000000f0390000f2390000f4390000f6390000f8390000fa390000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -493,7 +492,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff000000003c3a00003e3a0000403a0000423a0000443a00004e3a0000
+    m_ExpandedIDs: ffffffff00000000f0390000f2390000f4390000f6390000f8390000fa390000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -578,7 +577,7 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 903a0000
+      m_SelectedIDs: 
       m_LastClickedID: 0
       m_ExpandedIDs: 74fbffff
       m_RenameOverlay:
@@ -640,9 +639,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.6801758, y: -1.2774658, z: -2.1621094}
+    m_Target: {x: 1, y: 1, z: 1}
     speed: 2
-    m_Value: {x: 0.6801758, y: -1.2774658, z: -2.1621094}
+    m_Value: {x: 0, y: 1, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -690,11 +689,11 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: 0.026986685, y: -0.026989445, z: 0.0007417475, w: 0.99929726}
     speed: 2
-    m_Value: {x: -0.026986685, y: 0.026989445, z: -0.0007417475, w: -0.99929726}
+    m_Value: {x: 0.11647957, y: -0.31172067, z: 0.038539313, w: 0.94221944}
   m_Size:
-    m_Target: 6.892422
+    m_Target: 3.5001786
     speed: 2
-    m_Value: 6.892422
+    m_Value: 22
   m_Ortho:
     m_Target: 1
     speed: 2
