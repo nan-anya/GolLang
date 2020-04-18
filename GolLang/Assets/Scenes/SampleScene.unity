@@ -545,7 +545,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e93efb6fd5253b4680648cb127f8b58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vars: []
 --- !u!4 &337476962
 Transform:
   m_ObjectHideFlags: 0
@@ -2990,6 +2989,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3837344256415367935, guid: bc00849540b4fb94fac0ae00aa4851ca,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -2232952877369940510, guid: 579ec50af4c61884fb3ba2beb525e859,
+        type: 3}
     - target: {fileID: 5196022547594426569, guid: bc00849540b4fb94fac0ae00aa4851ca,
         type: 3}
       propertyPath: m_LocalPosition.x

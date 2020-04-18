@@ -292,7 +292,7 @@ public class GolLangInterpreter : MonoBehaviour
         {
             GolLangParseNode rNode = new GolLangParseNode(new GolLangLine(node.line.extract(lpo + 1, node.line.keywords.Count - 1)));
 
-            GolLangParseNode lNode = new GolLangParseNode(new GolLangLine(node.line.extract(0, lpo)));
+            GolLangParseNode lNode = new GolLangParseNode(new GolLangLine(node.line.extract(0, lpo - 1)));
 
             node.addChild(lNode);
             node.addChild(rNode);

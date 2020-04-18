@@ -225,11 +225,13 @@ public class GolLangLine
 
         List<GolLangKeyword> temp = new List<GolLangKeyword>();
 
-        for (int i = to - 1; i >= from; i--)
+        for (int i = to; i >= from; i--)
         {
             temp.Add(keywords[i]);
             keywords.RemoveAt(i);
         }
+
+        temp.Reverse();
 
         return temp;
     }
