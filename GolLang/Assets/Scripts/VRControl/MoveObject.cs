@@ -6,11 +6,13 @@ public class MoveObject : MonoBehaviour
 {
     private bool CanSnap;
     private Collider others;
+    private float BlockScales;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        BoxCollider boxCollider = GetComponent<BoxCollider>();
+        BlockScales = boxCollider.size.x * (1.25f / (boxCollider.size.x/2));
     }
 
     // Update is called once per frame
@@ -23,7 +25,7 @@ public class MoveObject : MonoBehaviour
     {
         if (other.tag == "RightCollider" || other.tag == "DownCollider")
         {
-            Debug.Log("Snap");
+            Debug.Log("In");
             CanSnap = true;
             others = other;
         }
@@ -65,6 +67,7 @@ public class MoveObject : MonoBehaviour
     }
     */
 
+     // 블록 뗄때
     private void OnMouseUp()
     {
         // 스냅
@@ -75,9 +78,9 @@ public class MoveObject : MonoBehaviour
 
             Vector3 snap = Vector3.zero;
 
+            // 긴 블록
             if(mesh.mesh.name.Contains("002"))
             {
-
                 if(others.tag == "DownCollider")
                 {
                     Debug.Log("Down");
@@ -89,24 +92,33 @@ public class MoveObject : MonoBehaviour
                     snap = new Vector3(2, 0, 0);
                 }
             }
+            // 작은 블록
             else
             {
                 if (others.tag == "DownCollider")
                 {
-                    Debug.Log("Down");
+                    Debug.Log("Down2");
                     snap = new Vector3(0.5f, -1f, 0f);
                 }
                 else if (others.tag == "RightCollider")
                 {
-                    Debug.Log("Right");
+                    Debug.Log("Right2");
                     snap = new Vector3(1.5f, 0, 0);
                 }
             }
-            this.transform.position = others.transform.parent.transform.position + snap;
+
+            Debug.Log("SNOP");
+            /*
+            this.transform.position = others.transform.parent.transform.position + (snap * BlockScales  );
 
             // 블록 붙이기
             this.transform.SetParent(others.transform.parent.transform);
+            */
+
+            this.transform.position = others.transform.parent.transform.position + (snap * BlockScales);
+
+            // 블록 붙이기
+            this.transform.SetParent(others.transform);
         }
-        //CanSnap = false;
     }
 }
