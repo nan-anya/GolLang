@@ -13,15 +13,10 @@ public class GolLangTree : IEnumerable
         head = null;
     }
 
-    public void reset()
-    {
-        head.unvisite();
-
-        now = null;
-    }
-
     public IEnumerator GetEnumerator()
     {
+        head.unvisit();
+
         now = head;
 
         while (true)
@@ -167,13 +162,13 @@ public class GolLangNode
         }
     }
 
-    public void unvisite()
+    public void unvisit()
     {
         isVisited = false;
 
         foreach (GolLangNode i in children)
         {
-            i.unvisite();
+            i.unvisit();
         }
     }
 }

@@ -10,6 +10,10 @@ public class GolLangInterpreter : MonoBehaviour
 
     public List<GolLangFunctionDescription> functions;
 
+    private Stack<GolLangParseNode> calculateStack;
+
+    private List<GolLangVarData> variables;
+
     public GolLangInterpreter()
     { 
         
@@ -19,6 +23,8 @@ public class GolLangInterpreter : MonoBehaviour
     {
         vars = new List<GolLangVarData>();
         functions = new List<GolLangFunctionDescription>();
+        calculateStack = new Stack<GolLangParseNode>();
+        variables = new List<GolLangVarData>();
 
         test();
     }
@@ -77,13 +83,13 @@ public class GolLangInterpreter : MonoBehaviour
         gl.Add(new GolLangKeyword(GKeyword.MUL));
         gl.Add(new GolLangKeyword(GKeyword.VARI, "n"));
 
-
-
         GolLangLine line = new GolLangLine(gl);
 
         GolLangParseTree t = parse(line);
 
-        print(t);
+        string s = "";
+
+        print(s);
     }
 
     public void preorderTraversal()
@@ -118,7 +124,7 @@ public class GolLangInterpreter : MonoBehaviour
             }
         }
     }
-   
+
     public void interpret()
     {
 
@@ -155,9 +161,18 @@ public class GolLangInterpreter : MonoBehaviour
     //실행문은 함수가 있거나 할당연산자가 있어야한다.
     public enum lineKind {STARTHERE, FOR, IF, ELSE, ELIF, EXE, UNKNOWN}
 
-    public void excuteLine(GolLangNode node)
+    public int excuteLine(GolLangNode node)
     {
-       
+        //int로 에러코드 반환
+
+        GolLangParseTree parseTree = parse(node.line);
+
+        foreach (GolLangParseNode i in parseTree)
+        {
+
+        }
+
+        return 0;
     }
 
     public GolLangParseTree parse(GolLangLine line)

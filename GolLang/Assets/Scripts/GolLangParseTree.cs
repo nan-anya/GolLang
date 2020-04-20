@@ -19,13 +19,50 @@ public class GolLangParseTree : IEnumerable
         this.head = head;
     }
 
-    public void reset()
+
+    //후위 순회 Enumerator
+    public IEnumerator GetEnumerator()
     {
-        head.unvisite();
+        head.unvisit();
 
-        now = null;
+        now = head;
+
+        while (true)
+        {
+            GolLangParseNode temp = now.getFirstUnvisitedChild();
+
+            if (temp == null)
+            {
+                if (!now.isVisited)
+                {
+                    now.isVisited = true;
+
+                    yield return now;
+                }
+
+                if (now.hasRightSibling())
+                {
+                    now = now.rightSibling;
+                }
+                else if (now.parents != null)
+                {
+                    now = now.parents;
+                }
+                else
+                {
+                    break;  
+                }
+
+            }
+            else
+            {
+                now = temp;
+            }
+
+        }
     }
-
+   
+    /* 전위 순회 Enumerator
     public IEnumerator GetEnumerator()
     {
         now = head;
@@ -59,6 +96,7 @@ public class GolLangParseTree : IEnumerable
             }
         }
     }
+    */
 }
 
 public class GolLangParseNode
@@ -160,13 +198,13 @@ public class GolLangParseNode
         }
     }
 
-    public void unvisite()
+    public void unvisit()
     {
         isVisited = false;
 
         foreach (GolLangParseNode i in children)
         {
-            i.unvisite();
+            i.unvisit();
         }
     }
 }
