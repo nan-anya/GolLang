@@ -164,15 +164,61 @@ public class GolLangInterpreter : MonoBehaviour
     public int excuteLine(GolLangNode node)
     {
         //int로 에러코드 반환
+        //0 정상
+        //1 할당되지 않은 변수
+        //2 피연산자 타입오류
+        //3 알려지지 않은 연산자
 
         GolLangParseTree parseTree = parse(node.line);
 
         foreach (GolLangParseNode i in parseTree)
         {
+            if (i.line.keywords[0].keyword == GKeyword.CONSTI ||
+                i.line.keywords[0].keyword == GKeyword.CONSTB ||
+                i.line.keywords[0].keyword == GKeyword.VARI ||
+                i.line.keywords[0].keyword == GKeyword.VARB ||
+                i.line.keywords[0].keyword == GKeyword.ARRI ||
+                i.line.keywords[0].keyword == GKeyword.ARRB)
+            {
+                calculateStack.Push(i);
+            }
+            else
+            {
+                if (i.line.keywords[0].keyword == GKeyword.PLUS)
+                { 
+                
+                }
+                else if (i.line.keywords[0].keyword == GKeyword.MINUS)
+                {
+
+                }
+            }
+
 
         }
 
         return 0;
+    }
+
+    public int dataEvaluation(GolLangParseNode node)
+    {
+        if (node.line.keywords[0].keyword == GKeyword.CONSTI)
+        { 
+            
+        }
+        else if (node.line.keywords[0].keyword == GKeyword.CONSTB)
+        {
+
+        }
+        else if (node.line.keywords[0].keyword == GKeyword.VARI)
+        {
+
+        }
+        else if (node.line.keywords[0].keyword == GKeyword.VARB)
+        {
+
+        }
+
     }
 
     public GolLangParseTree parse(GolLangLine line)
@@ -439,6 +485,15 @@ public class GolLangInterpreter : MonoBehaviour
         {
             spliteNode(i);
         }
+    }
+
+
+
+
+
+    public class dataState
+    { 
+        
     }
 }
 
