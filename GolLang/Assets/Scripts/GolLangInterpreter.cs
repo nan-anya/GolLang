@@ -199,12 +199,12 @@ public class GolLangInterpreter : MonoBehaviour
 
         return 0;
     }
-
-    public int dataEvaluation(GolLangParseNode node)
+    /*
+    public dataState dataEvaluation(GolLangParseNode node)
     {
         if (node.line.keywords[0].keyword == GKeyword.CONSTI)
-        { 
-            
+        {
+
         }
         else if (node.line.keywords[0].keyword == GKeyword.CONSTB)
         {
@@ -218,8 +218,35 @@ public class GolLangInterpreter : MonoBehaviour
         {
 
         }
+        else if (node.line.keywords[0].keyword == GKeyword.ARRI)
+        {
+
+        }
+        else if (node.line.keywords[0].keyword == GKeyword.ARRB)
+        {
+
+        }
+        else
+        {
+            return new dataState(0, dataType.ERROR);
+        }
 
     }
+    */
+
+    private class dataState
+    {
+        public int value;
+
+        public dataType type;
+
+        public dataState(int value, dataType type)
+        {
+            this.value = value;
+            this.type = type;
+        }        
+    }
+    public enum dataType { VARI, VARB, CONSTI, CONSTB, ARRI, ARRB, ERROR }
 
     public GolLangParseTree parse(GolLangLine line)
     {
@@ -487,14 +514,6 @@ public class GolLangInterpreter : MonoBehaviour
         }
     }
 
-
-
-
-
-    public class dataState
-    { 
-        
-    }
 }
 
 public class GolLangFunctionDescription
