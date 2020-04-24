@@ -10,6 +10,10 @@ public class GolLangInterpreter : MonoBehaviour
 
     public List<GolLangFunctionDescription> functions;
 
+    private Stack<GolLangParseNode> calculateStack;
+
+    private List<GolLangVarData> variables;
+
     public GolLangInterpreter()
     { 
         
@@ -19,6 +23,8 @@ public class GolLangInterpreter : MonoBehaviour
     {
         vars = new List<GolLangVarData>();
         functions = new List<GolLangFunctionDescription>();
+        calculateStack = new Stack<GolLangParseNode>();
+        variables = new List<GolLangVarData>();
 
         test();
     }
@@ -32,17 +38,58 @@ public class GolLangInterpreter : MonoBehaviour
 
         List<GolLangKeyword> gl = new List<GolLangKeyword>();
 
+
         gl.Add(new GolLangKeyword(GKeyword.VARI, "i"));
         gl.Add(new GolLangKeyword(GKeyword.ASS));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "a"));
+        gl.Add(new GolLangKeyword(GKeyword.FUNC, "F1"));
+        gl.Add(new GolLangKeyword(GKeyword.BOP));
+        gl.Add(new GolLangKeyword(GKeyword.FUNC, "F2"));
+        gl.Add(new GolLangKeyword(GKeyword.BOP));
+        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "1"));
+        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "2"));
+        gl.Add(new GolLangKeyword(GKeyword.COMMA));
+        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "3"));
+        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "4"));
+        gl.Add(new GolLangKeyword(GKeyword.BCL));
+        gl.Add(new GolLangKeyword(GKeyword.COMMA));
+        gl.Add(new GolLangKeyword(GKeyword.FUNC, "F3"));
+        gl.Add(new GolLangKeyword(GKeyword.BOP));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "c"));
+        gl.Add(new GolLangKeyword(GKeyword.MUL));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "d"));
+        gl.Add(new GolLangKeyword(GKeyword.DIV));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "e"));
+        gl.Add(new GolLangKeyword(GKeyword.COMMA));
+        gl.Add(new GolLangKeyword(GKeyword.BOP));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "f"));
         gl.Add(new GolLangKeyword(GKeyword.PLUS));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "b"));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "g"));
+        gl.Add(new GolLangKeyword(GKeyword.BCL));
+        gl.Add(new GolLangKeyword(GKeyword.MUL));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "h"));
+        gl.Add(new GolLangKeyword(GKeyword.BCL));
+        gl.Add(new GolLangKeyword(GKeyword.BCL));
+        gl.Add(new GolLangKeyword(GKeyword.PLUS));
+        gl.Add(new GolLangKeyword(GKeyword.FUNC, "F4"));
+        gl.Add(new GolLangKeyword(GKeyword.BOP));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "j"));
+        gl.Add(new GolLangKeyword(GKeyword.PLUS));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "k"));
+        gl.Add(new GolLangKeyword(GKeyword.MINUS));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "l"));
+        gl.Add(new GolLangKeyword(GKeyword.PLUS));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "m"));
+        gl.Add(new GolLangKeyword(GKeyword.BCL));
+        gl.Add(new GolLangKeyword(GKeyword.MUL));
+        gl.Add(new GolLangKeyword(GKeyword.VARI, "n"));
 
         GolLangLine line = new GolLangLine(gl);
 
         GolLangParseTree t = parse(line);
 
-        print(t);
+        string s = "";
+
+        print(s);
     }
 
     public void preorderTraversal()
@@ -77,7 +124,7 @@ public class GolLangInterpreter : MonoBehaviour
             }
         }
     }
-   
+
     public void interpret()
     {
 
@@ -114,10 +161,92 @@ public class GolLangInterpreter : MonoBehaviour
     //실행문은 함수가 있거나 할당연산자가 있어야한다.
     public enum lineKind {STARTHERE, FOR, IF, ELSE, ELIF, EXE, UNKNOWN}
 
-    public void excuteLine(GolLangNode node)
+    public int excuteLine(GolLangNode node)
     {
-       
+        //int로 에러코드 반환
+        //0 정상
+        //1 할당되지 않은 변수
+        //2 피연산자 타입오류
+        //3 알려지지 않은 연산자
+
+        GolLangParseTree parseTree = parse(node.line);
+
+        foreach (GolLangParseNode i in parseTree)
+        {
+            if (i.line.keywords[0].keyword == GKeyword.CONSTI ||
+                i.line.keywords[0].keyword == GKeyword.CONSTB ||
+                i.line.keywords[0].keyword == GKeyword.VARI ||
+                i.line.keywords[0].keyword == GKeyword.VARB ||
+                i.line.keywords[0].keyword == GKeyword.ARRI ||
+                i.line.keywords[0].keyword == GKeyword.ARRB)
+            {
+                calculateStack.Push(i);
+            }
+            else
+            {
+                if (i.line.keywords[0].keyword == GKeyword.PLUS)
+                { 
+                
+                }
+                else if (i.line.keywords[0].keyword == GKeyword.MINUS)
+                {
+
+                }
+            }
+
+
+        }
+
+        return 0;
     }
+    /*
+    public dataState dataEvaluation(GolLangParseNode node)
+    {
+        if (node.line.keywords[0].keyword == GKeyword.CONSTI)
+        {
+
+        }
+        else if (node.line.keywords[0].keyword == GKeyword.CONSTB)
+        {
+
+        }
+        else if (node.line.keywords[0].keyword == GKeyword.VARI)
+        {
+
+        }
+        else if (node.line.keywords[0].keyword == GKeyword.VARB)
+        {
+
+        }
+        else if (node.line.keywords[0].keyword == GKeyword.ARRI)
+        {
+
+        }
+        else if (node.line.keywords[0].keyword == GKeyword.ARRB)
+        {
+
+        }
+        else
+        {
+            return new dataState(0, dataType.ERROR);
+        }
+
+    }
+    */
+
+    private class dataState
+    {
+        public int value;
+
+        public dataType type;
+
+        public dataState(int value, dataType type)
+        {
+            this.value = value;
+            this.type = type;
+        }        
+    }
+    public enum dataType { VARI, VARB, CONSTI, CONSTB, ARRI, ARRB, ERROR }
 
     public GolLangParseTree parse(GolLangLine line)
     {
@@ -132,47 +261,73 @@ public class GolLangInterpreter : MonoBehaviour
     {
         List<int> exclude = new List<int>();
 
-        int bracketCount = 0;
-
-        for (int i = 0; i < keywords.Count; i++)
+        while (true)
         {
-            // 여는 괄호 제외
-            if (keywords[i].keyword == GKeyword.BOP)
+            exclude.Clear();
+
+            int bracketCount = 0;
+
+            for (int i = 0; i < keywords.Count; i++)
             {
-                bracketCount++;
-                exclude.Add(i);
+                // 여는 괄호 제외
+                if (keywords[i].keyword == GKeyword.BOP)
+                {
+                    bracketCount++;
+                    exclude.Add(i);
+                }
+                //닫는 괄호 제외
+                else if (keywords[i].keyword == GKeyword.BCL)
+                {
+                    bracketCount--;
+                    exclude.Add(i);
+                }
+                //괄호안에 있는 것들 제외
+                else if (bracketCount != 0)
+                {
+                    exclude.Add(i);
+                }
+                //콤마 제외
+                else if (keywords[i].keyword == GKeyword.COMMA)
+                {
+                    exclude.Add(i);
+                }
+                //피연산자 제외
+                else if (keywords[i].keyword == GKeyword.VARI ||
+                         keywords[i].keyword == GKeyword.VARB ||
+                         keywords[i].keyword == GKeyword.ARRI ||
+                         keywords[i].keyword == GKeyword.ARRB ||
+                         keywords[i].keyword == GKeyword.CONSTI ||
+                         keywords[i].keyword == GKeyword.CONSTB)
+                {
+                    exclude.Add(i);
+                }
             }
-            //닫는 괄호 제외
-            else if (keywords[i].keyword == GKeyword.BCL)
+
+            if (exclude.Count == keywords.Count)
             {
-                bracketCount--;
-                exclude.Add(i);
+                //순서에 관계없는 괄호로 인해 검출이 안되는지 검사  {예 : (a+b)}
+                if (keywords[0].keyword == GKeyword.BOP)
+                {
+                    keywords.RemoveAt(keywords.Count - 1);
+                    keywords.RemoveAt(0);
+                    continue;
+                }
+                else
+                {
+                    return -1;
+                }
             }
-            //괄호안에 있는 것들 제외
-            else if (bracketCount != 0)
+            else
             {
-                exclude.Add(i);
-            }
-            //콤마 제외
-            else if (keywords[i].keyword == GKeyword.COMMA)
-            {
-                exclude.Add(i);
-            }
-            //피연산자 제외
-            else if (keywords[i].keyword == GKeyword.VARI ||
-                     keywords[i].keyword == GKeyword.VARB ||
-                     keywords[i].keyword == GKeyword.ARRI ||
-                     keywords[i].keyword == GKeyword.ARRB ||
-                     keywords[i].keyword == GKeyword.CONSTI ||
-                     keywords[i].keyword == GKeyword.CONSTB)
-            {
-                exclude.Add(i);
+                break;
             }
         }
 
+        int lowest = -1;
 
+        int priority = 9999;
 
-        for(int i = 0; i < keywords.Count; i++)
+        for (int i = 0; i < keywords.Count; i++)
         {
             if (exclude.Contains(i))
             {
@@ -182,60 +337,96 @@ public class GolLangInterpreter : MonoBehaviour
             // =
             if (keywords[i].keyword == GKeyword.ASS)
             {
-                return i;
+                if (priority >= 0)
+                {
+                    lowest = i;
+                    priority = 0;
+                }
             }
             // ||
             else if (keywords[i].keyword == GKeyword.OR)
             {
-                return i;
+                if (priority >= 1)
+                {
+                    lowest = i;
+                    priority = 1;
+                }
             }
             // &&
             else if (keywords[i].keyword == GKeyword.AND)
             {
-                return i;
+                if (priority >= 2)
+                {
+                    lowest = i;
+                    priority = 2;
+                }
             }
             // !=, ==, >=, <=, <, >
             else if (keywords[i].keyword == GKeyword.EQ ||
                      keywords[i].keyword == GKeyword.NEQ ||
-                     keywords[i].keyword == GKeyword.BT ||
+                     keywords[i].keyword == GKeyword.GT ||
                      keywords[i].keyword == GKeyword.LT ||
-                     keywords[i].keyword == GKeyword.BE ||
+                     keywords[i].keyword == GKeyword.GE ||
                      keywords[i].keyword == GKeyword.LE)
             {
-                return i;
+                if (priority >= 3)
+                {
+                    lowest = i;
+                    priority = 3;
+                }
             }
             // +, -
             else if (keywords[i].keyword == GKeyword.PLUS ||
                      keywords[i].keyword == GKeyword.MINUS)
             {
-                return i;
+                if (priority >= 4)
+                {
+                    lowest = i;
+                    priority = 4;
+                }
             }
             // *, /, %
             else if (keywords[i].keyword == GKeyword.MUL ||
                      keywords[i].keyword == GKeyword.DIV ||
                      keywords[i].keyword == GKeyword.MOD)
             {
-                return i;
+                if (priority >= 5)
+                {
+                    lowest = i;
+                    priority = 5;
+                }
             }
             // -(음수)
             else if (keywords[i].keyword == GKeyword.NEG)
             {
-                return i;
+                if (priority >= 6)
+                {
+                    lowest = i;
+                    priority = 6;
+                }
             }
             // !
             else if (keywords[i].keyword == GKeyword.NOT)
             {
-                return i;
+                if (priority >= 7)
+                {
+                    lowest = i;
+                    priority = 7;
+                }
             }
             // 함수
             else if (keywords[i].keyword == GKeyword.FUNC)
             {
-                return i;
+                if (priority >= 8)
+                {
+                    lowest = i;
+                    priority = 8;
+                }
             }
 
         }
 
-        return -1;
+        return lowest;
     }
 
     private void spliteNode(GolLangParseNode node)
@@ -257,16 +448,35 @@ public class GolLangInterpreter : MonoBehaviour
             int from = 1;
             int to = 0;
 
-            for (int i = 2; i < node.line.keywords.Count-2; i++)
+            int bracketCount = 0;
+
+            for (int i = 2; i < node.line.keywords.Count-1; i++)
             {
-                if (node.line.keywords[i].keyword != GKeyword.COMMA)
+                //함수의 파라미터들을 콤마 단위로 끊음, 단 괄호의 안일경우 끊지 않음
+                if (node.line.keywords[i].keyword == GKeyword.COMMA)
                 {
-                    keywords.Add(node.line.keywords[i]);
+                    if (bracketCount == 0)
+                    {
+                        tempL.Add(new GolLangParseNode(new GolLangLine(keywords)));
+                        keywords.Clear();
+                    }
+                    else
+                    {
+                        keywords.Add(node.line.keywords[i]);
+                    }
                 }
                 else
                 {
-                    tempL.Add(new GolLangParseNode(new GolLangLine(keywords)));
-                    keywords.Clear();
+                    if (node.line.keywords[i].keyword == GKeyword.BOP)
+                    {
+                        bracketCount++;
+                    }
+                    else if (node.line.keywords[i].keyword == GKeyword.BCL)
+                    {
+                        bracketCount--;
+                    }
+
+                    keywords.Add(node.line.keywords[i]);
                 }
             }
 
@@ -303,6 +513,7 @@ public class GolLangInterpreter : MonoBehaviour
             spliteNode(i);
         }
     }
+
 }
 
 public class GolLangFunctionDescription

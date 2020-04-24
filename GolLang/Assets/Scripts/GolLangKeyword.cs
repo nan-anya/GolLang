@@ -47,7 +47,7 @@ public enum GKeyword
     //Control
     FOR, IF, ELIF, ELSE,
     //Compare
-    EQ, NEQ, BT, LT, BE, LE,
+    EQ, NEQ, GT, LT, GE, LE,
     //Calculate
     PLUS, MINUS, MUL, DIV, MOD,
     //Negative Num

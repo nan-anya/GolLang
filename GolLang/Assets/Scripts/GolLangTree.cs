@@ -13,15 +13,10 @@ public class GolLangTree : IEnumerable
         head = null;
     }
 
-    public void reset()
-    {
-        head.unvisite();
-
-        now = null;
-    }
-
     public IEnumerator GetEnumerator()
     {
+        head.unvisit();
+
         now = head;
 
         while (true)
@@ -167,13 +162,13 @@ public class GolLangNode
         }
     }
 
-    public void unvisite()
+    public void unvisit()
     {
         isVisited = false;
 
         foreach (GolLangNode i in children)
         {
-            i.unvisite();
+            i.unvisit();
         }
     }
 }
@@ -197,7 +192,73 @@ public class GolLangLine
 
         foreach (GolLangKeyword i in keywords)
         {
-            temp += i.keyword.ToString();
+            if (i.name.Equals(""))
+            {
+                switch (i.keyword)
+                {
+                    case GKeyword.AND:
+                        temp += "&&";
+                        break;
+                    case GKeyword.ASS:
+                        temp += "=";
+                        break;
+                    case GKeyword.BCL:
+                        temp += ")";
+                        break;
+                    case GKeyword.BOP:
+                        temp += "(";
+                        break;
+                    case GKeyword.COMMA:
+                        temp += ",";
+                        break;
+                    case GKeyword.DIV:
+                        temp += "/";
+                        break;
+                    case GKeyword.EQ:
+                        temp += "==";
+                        break;
+                    case GKeyword.GE:
+                        temp += ">=";
+                        break;
+                    case GKeyword.GT:
+                        temp += ">";
+                        break;
+                    case GKeyword.LE:
+                        temp += "<=";
+                        break;
+                    case GKeyword.LT:
+                        temp += "<";
+                        break;
+                    case GKeyword.MINUS:
+                        temp += "-";
+                        break;
+                    case GKeyword.MOD:
+                        temp += "%";
+                        break;
+                    case GKeyword.MUL:
+                        temp += "*";
+                        break;
+                    case GKeyword.NEG:
+                        temp += "-";
+                        break;
+                    case GKeyword.NEQ:
+                        temp += "!=";
+                        break;
+                    case GKeyword.NOT:
+                        temp += "!";
+                        break;
+                    case GKeyword.OR:
+                        temp += "||";
+                        break;
+                    case GKeyword.PLUS:
+                        temp += "+";
+                        break;
+                }
+            }
+            else
+            {
+                temp += i.name;
+            }
         }
 
         return temp;
@@ -218,7 +279,7 @@ public class GolLangLine
         {
             return null;
         }
-        else if (from >= to)
+        else if (from > to)
         {
             return null;
         }
