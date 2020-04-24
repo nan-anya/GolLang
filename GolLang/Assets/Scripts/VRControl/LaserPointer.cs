@@ -28,7 +28,7 @@ public class LaserPointer : MonoBehaviour
         // 거리 구하기
         // 닿는게 없으면 기본거리, 있으면 닿은 점까지 거리
         float targetLength = data.pointerCurrentRaycast.distance == 0 ? m_DefaultLength : data.pointerCurrentRaycast.distance;
-       // float targetLength = m_DefaultLength;
+        // float targetLength = m_DefaultLength;
 
         // 히트 정보
         RaycastHit hit = CreateRaycast(targetLength);

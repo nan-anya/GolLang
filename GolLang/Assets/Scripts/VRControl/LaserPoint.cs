@@ -14,7 +14,7 @@ public class LaserPoint : MonoBehaviour
     // 터치패드 클릭
     public SteamVR_Action_Boolean teleportAction;
 
-    public SteamVR_Action_Boolean triggerAction;
+    //public SteamVR_Action_Boolean triggerAction;
 
     // 레이저 오브젝트
     public GameObject laserPrefab;
@@ -57,7 +57,7 @@ public class LaserPoint : MonoBehaviour
     {
         UpdateLaser();
     }
-
+    /*
     void UpdateTrigger()
     {
         if(triggerAction.GetStateDown(handType))
@@ -84,6 +84,7 @@ public class LaserPoint : MonoBehaviour
             reticle.SetActive(false);
         }
     }
+    */
 
     void UpdateLaser()
     {
@@ -111,6 +112,7 @@ public class LaserPoint : MonoBehaviour
 
             ShowLaser0();
         }
+        /*
         // 트리거 동작
         else if (triggerAction.GetState(handType))
         {
@@ -130,6 +132,7 @@ public class LaserPoint : MonoBehaviour
 
             ShowLaser0();
         }
+        */
         else
         {
             laser.SetActive(false);
@@ -138,14 +141,15 @@ public class LaserPoint : MonoBehaviour
 
         if (teleportAction.GetStateUp(handType) && canTeleport)
         {
+            Debug.Log("TELEPORT");
             Teleport();
         }
     }
 
     private bool CheckTeleport(RaycastHit hit)
     {
-        Debug.Log(LayerMask.NameToLayer("canTeleport"));
-        return (CheckLayer(hit) == LayerMask.NameToLayer("canTeleport")) ;
+        Debug.Log(LayerMask.NameToLayer("CanTeleport") + " now");
+        return (CheckLayer(hit) == LayerMask.NameToLayer("CanTeleport")) ;
     }
 
     private int CheckLayer(RaycastHit hit)
