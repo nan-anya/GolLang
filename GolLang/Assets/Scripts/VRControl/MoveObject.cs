@@ -140,7 +140,6 @@ public class MoveObject : MonoBehaviour
 
             // 위치 계산
             BoxCollider boxCollider = others.transform.parent.GetComponent<BoxCollider>();
-            //BlockScales = ((this.GetComponent<BoxCollider>().size.x - (1.3f * ScaleRatio)) / 2) + ((boxCollider.size.x - (1.3f * ScaleRatio))/2);
             BlockScales = ((this.GetComponent<BoxCollider>().size.x - 1.3f) / 2) + ((boxCollider.size.x - 1.3f) / 2);
             BlockScales *= ScaleRatio;
 
