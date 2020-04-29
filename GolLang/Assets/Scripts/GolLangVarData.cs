@@ -2,14 +2,19 @@
 {
     public string name;
 
-    public string value;
+    public int value;
 
     public ValueType type;
 
-    public GolLangVarData(string name, string value, ValueType type)
+    public GolLangVarData(string name, int value, ValueType type)
     {
         this.name = name;
         this.value = value;
         this.type = type;
+    }
+
+    public override string ToString()
+    {
+        return type.ToString() + " : " + name + " : " + value.ToString();
     }
 }
