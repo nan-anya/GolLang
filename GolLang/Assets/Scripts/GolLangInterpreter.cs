@@ -200,7 +200,7 @@ public class GolLangInterpreter : MonoBehaviour
                             {
                                 foreach (GolLangNode l in ifFamily)
                                 {
-                                    i.visit();
+                                    l.visit();
                                 }
 
                                 k.unvisit();
