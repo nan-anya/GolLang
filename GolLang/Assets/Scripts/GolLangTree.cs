@@ -13,6 +13,7 @@ public class GolLangTree : IEnumerable
         head = null;
     }
 
+    //전위 순회 Enumerator
     public IEnumerator GetEnumerator()
     {
         head.unvisit();
@@ -77,11 +78,6 @@ public class GolLangNode
         children = new List<GolLangNode>();
 
         isVisited = false;
-    }
-
-    public string excute()
-    {
-        return this.ToString();
     }
 
     public override string ToString()
@@ -171,6 +167,16 @@ public class GolLangNode
             i.unvisit();
         }
     }
+
+    public void visit()
+    {
+        isVisited = true;
+
+        foreach (GolLangNode i in children)
+        {
+            i.visit();
+        }
+    }
 }
 
 public class GolLangLine
@@ -192,7 +198,7 @@ public class GolLangLine
 
         foreach (GolLangKeyword i in keywords)
         {
-            if (i.name.Equals(""))
+            if (i.nameOrValue.Equals(""))
             {
                 switch (i.keyword)
                 {
@@ -257,7 +263,7 @@ public class GolLangLine
             }
             else
             {
-                temp += i.name;
+                temp += i.nameOrValue;
             }
         }
 

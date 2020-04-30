@@ -5,36 +5,36 @@ using UnityEngine;
 public class GolLangKeyword
 {
     public GKeyword keyword;
-    public string name;//함수, 변수라면 이름, 상수라면 값
+    public string nameOrValue;//함수, 변수라면 이름, 상수라면 값
 
     public GolLangKeyword(GKeyword keyword)
     {
         this.keyword = keyword;
 
-        this.name = "";
+        this.nameOrValue = "";
     }
-    public GolLangKeyword(GKeyword keyword, string name)
+    public GolLangKeyword(GKeyword keyword, string nameOrValue)
     {
         this.keyword = keyword;
 
-        this.name = name;
+        this.nameOrValue = nameOrValue;
     }
 
     public override string ToString()
     {
-        if(name.Equals(""))
+        if(nameOrValue.Equals(""))
         {
             return keyword.ToString();
         }
         else
         {
-            return name;
+            return nameOrValue;
         }
     }
 
     public GolLangKeyword clone()
     {
-        return new GolLangKeyword(this.keyword, this.name);
+        return new GolLangKeyword(this.keyword, this.nameOrValue);
     }
 }
 
@@ -46,8 +46,10 @@ public enum GKeyword
     VARI, VARB, ARRI, ARRB, CONSTI, CONSTB,
     //Control
     FOR, IF, ELIF, ELSE,
-    //Compare
-    EQ, NEQ, GT, LT, GE, LE,
+    //Int and Bool Compare
+    EQ, NEQ,
+    //Int only Compare
+    GT, LT, GE, LE,
     //Calculate
     PLUS, MINUS, MUL, DIV, MOD,
     //Negative Num
@@ -66,5 +68,5 @@ public enum GKeyword
 
 public enum ValueType
 {
-    ONEI, ONEB, ARRI, ARRB, VOID
+    VARI, VARB, ARRI, ARRB, VOID
 }
