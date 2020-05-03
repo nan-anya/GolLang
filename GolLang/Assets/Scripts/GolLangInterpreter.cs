@@ -9,22 +9,17 @@ using Valve.VR.InteractionSystem;
 public class GolLangInterpreter : MonoBehaviour
 {
     public GolLangTree gTree;
-    
-    public List<GolLangVarData> vars;
 
     public List<GolLangFunctionDescription> functions;
-
-    
 
     private List<GolLangVarData> variables;
 
     void Start()
     {
-        vars = new List<GolLangVarData>();
         functions = new List<GolLangFunctionDescription>();
         variables = new List<GolLangVarData>();
 
-        test2();
+        test();
     }
 
     void test()
@@ -32,62 +27,80 @@ public class GolLangInterpreter : MonoBehaviour
         functions.Add(new GolLangFunctionDescription("F1", new List<ValueType>(new ValueType[] { ValueType.VARI, ValueType.VARI }), ValueType.VARI));
         functions.Add(new GolLangFunctionDescription("F2", new List<ValueType>(new ValueType[] { ValueType.VARI, ValueType.VARI }), ValueType.VARI));
         functions.Add(new GolLangFunctionDescription("F3", new List<ValueType>(new ValueType[] { ValueType.VARI, ValueType.VARI }), ValueType.VARI));
-        functions.Add(new GolLangFunctionDescription("F4", new List<ValueType>(new ValueType[] { ValueType.VARI}), ValueType.VARI));
+        functions.Add(new GolLangFunctionDescription("F4", new List<ValueType>(new ValueType[] { ValueType.VARI }), ValueType.VARI));
 
-        List<GolLangKeyword> gl = new List<GolLangKeyword>();
+        gTree = new GolLangTree();
 
+        List<GolLangKeyword> tempGLK = new List<GolLangKeyword>();
 
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "i"));
-        gl.Add(new GolLangKeyword(GKeyword.ASS));
-        gl.Add(new GolLangKeyword(GKeyword.FUNC, "F1"));
-        gl.Add(new GolLangKeyword(GKeyword.BOP));
-        gl.Add(new GolLangKeyword(GKeyword.FUNC, "F2"));
-        gl.Add(new GolLangKeyword(GKeyword.BOP));
-        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "1"));
-        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "2"));
-        gl.Add(new GolLangKeyword(GKeyword.COMMA));
-        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "3"));
-        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "4"));
-        gl.Add(new GolLangKeyword(GKeyword.BCL));
-        gl.Add(new GolLangKeyword(GKeyword.COMMA));
-        gl.Add(new GolLangKeyword(GKeyword.FUNC, "F3"));
-        gl.Add(new GolLangKeyword(GKeyword.BOP));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "c"));
-        gl.Add(new GolLangKeyword(GKeyword.MUL));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "d"));
-        gl.Add(new GolLangKeyword(GKeyword.DIV));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "e"));
-        gl.Add(new GolLangKeyword(GKeyword.COMMA));
-        gl.Add(new GolLangKeyword(GKeyword.BOP));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "f"));
-        gl.Add(new GolLangKeyword(GKeyword.PLUS));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "g"));
-        gl.Add(new GolLangKeyword(GKeyword.BCL));
-        gl.Add(new GolLangKeyword(GKeyword.MUL));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "h"));
-        gl.Add(new GolLangKeyword(GKeyword.BCL));
-        gl.Add(new GolLangKeyword(GKeyword.BCL));
-        gl.Add(new GolLangKeyword(GKeyword.PLUS));
-        gl.Add(new GolLangKeyword(GKeyword.FUNC, "F4"));
-        gl.Add(new GolLangKeyword(GKeyword.BOP));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "j"));
-        gl.Add(new GolLangKeyword(GKeyword.PLUS));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "k"));
-        gl.Add(new GolLangKeyword(GKeyword.MINUS));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "l"));
-        gl.Add(new GolLangKeyword(GKeyword.PLUS));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "m"));
-        gl.Add(new GolLangKeyword(GKeyword.BCL));
-        gl.Add(new GolLangKeyword(GKeyword.MUL));
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "n"));
+        tempGLK.Add(new GolLangKeyword(GKeyword.STARTHERE));
 
-        GolLangLine line = new GolLangLine(gl);
+        gTree.head = new GolLangNode(new GolLangLine(tempGLK));
 
-        GolLangParseTree t = parse(line);
+        tempGLK.Clear();
+        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "i"));
+        tempGLK.Add(new GolLangKeyword(GKeyword.ASS));
+        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "0"));
 
-        string s = "";
+        gTree.head.addChild(new GolLangNode(new GolLangLine(tempGLK)));
 
-        print(s);
+        tempGLK.Clear();
+
+        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "k"));
+        tempGLK.Add(new GolLangKeyword(GKeyword.ASS));
+        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "0"));
+
+        gTree.head.addChild(new GolLangNode(new GolLangLine(tempGLK)));
+
+        tempGLK.Clear();
+
+        tempGLK.Add(new GolLangKeyword(GKeyword.FOR));
+        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "i"));
+        tempGLK.Add(new GolLangKeyword(GKeyword.NEQ));
+        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "3"));
+
+        gTree.head.addChild(new GolLangNode(new GolLangLine(tempGLK)));
+
+        tempGLK.Clear();
+
+        tempGLK.Add(new GolLangKeyword(GKeyword.IF));
+        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "i"));
+        tempGLK.Add(new GolLangKeyword(GKeyword.MOD));
+        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "2"));
+        tempGLK.Add(new GolLangKeyword(GKeyword.EQ));
+        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "1"));
+
+        gTree.head.children[2].addChild(new GolLangNode(new GolLangLine(tempGLK)));
+
+        tempGLK.Clear();
+
+        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "k"));
+        tempGLK.Add(new GolLangKeyword(GKeyword.ASS));
+        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "k"));
+        tempGLK.Add(new GolLangKeyword(GKeyword.PLUS));
+        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "1"));
+
+        gTree.head.children[2].children[0].addChild(new GolLangNode(new GolLangLine(tempGLK)));
+
+        tempGLK.Clear();
+
+        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "i"));
+        tempGLK.Add(new GolLangKeyword(GKeyword.ASS));
+        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "i"));
+        tempGLK.Add(new GolLangKeyword(GKeyword.PLUS));
+        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "1"));
+
+        gTree.head.children[2].addChild(new GolLangNode(new GolLangLine(tempGLK)));
+
+        tempGLK.Clear();
+
+        interpret();
+
+        foreach (GolLangVarData i in variables)
+        {
+            print(i);
+        }
+        
     }
 
     void test2()
@@ -108,7 +121,6 @@ public class GolLangInterpreter : MonoBehaviour
 
         excuteLine(gn);
 
-        print(variables[0]);
     }
 
     public void preorderTraversal()
@@ -154,7 +166,41 @@ public class GolLangInterpreter : MonoBehaviour
             }
             else if (lineCheck(i.line) == lineKind.FOR)
             {
+                GolLangNode tempGN = new GolLangNode(new GolLangLine(i.line.keywords.GetRange(1, i.line.keywords.Count - 1)));
 
+                CalcResult tempCR = excuteLine(tempGN);
+
+                if (tempCR.errorCode == 0)
+                {
+                    if (tempCR.resultValue == 1)
+                    {
+                        i.unvisit();
+                    }
+                    else
+                    {
+                        i.visit();
+                    }
+                }
+                else
+                {
+                    //TODO 에러처리
+                    if (tempCR.errorCode == 1)
+                    {
+
+                    }
+                    else if (tempCR.errorCode == 2)
+                    {
+
+                    }
+                    else if (tempCR.errorCode == 3)
+                    {
+
+                    }
+                    else if (tempCR.errorCode == 4)
+                    {
+
+                    }
+                }
             }
             else if (lineCheck(i.line) == lineKind.IF)
             {
@@ -204,7 +250,8 @@ public class GolLangInterpreter : MonoBehaviour
                                 }
 
                                 k.unvisit();
-                                
+                                k.isVisited = true;
+
                                 break;
                             }
                             else
@@ -234,12 +281,15 @@ public class GolLangInterpreter : MonoBehaviour
                         }
                     }
                     else //(k.line.keywords[0].keyword == GKeyword.ELSE)
-                    { 
-                        
+                    {
+
                     }
                 }
             }
-            
+            else if (lineCheck(i.line) == lineKind.STARTHERE)
+            { 
+                //Do nothing
+            }
         }
     }
 
@@ -272,7 +322,6 @@ public class GolLangInterpreter : MonoBehaviour
 
     private enum lineKind {STARTHERE, FOR, IF, ELSE, ELIF, EXE, UNKNOWN}
 
-    
     private CalcResult excuteLine(GolLangNode node)
     {
         Stack<GolLangParseNode> calculateStack = new Stack<GolLangParseNode>();
@@ -1177,7 +1226,7 @@ public class GolLangInterpreter : MonoBehaviour
             }
         }
 
-        if (calculateStack.Peek() != null)
+        if (calculateStack.Count != 0)
         {
             return new CalcResult(0, int.Parse(calculateStack.Peek().line.keywords[0].nameOrValue));
         }
@@ -1202,7 +1251,7 @@ public class GolLangInterpreter : MonoBehaviour
         public CalcResult(int errorCode, int resultValue)
         {
             this.errorCode = errorCode;
-            this.resultValue = errorCode;
+            this.resultValue = resultValue;
         }
 
         public CalcResult(int resultValue)
