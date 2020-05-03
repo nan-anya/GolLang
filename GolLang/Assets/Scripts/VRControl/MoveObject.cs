@@ -7,7 +7,8 @@ public class MoveObject : MonoBehaviour
     private bool CanSnap;
     private Collider others;
     private float BlockScales;
-    private float ScaleRatio = 0.02f;
+    //private float ScaleRatio = 0.02f;
+    private float ScaleRatio = 20f;
 
     // Start is called before the first frame update
     void Start()
@@ -38,10 +39,7 @@ public class MoveObject : MonoBehaviour
             Debug.Log("Exit " + other.tag);
             CanSnap = false;
             others = null;
-
-            // 블록 떼기
-           // this.transform.SetParent(null);
-
+          
             // 블록 떼기
             this.transform.SetParent(GameObject.Find("WorkSpace").transform);
         }
@@ -102,11 +100,9 @@ public class MoveObject : MonoBehaviour
                 BlockScales = ((this.GetComponent<BoxCollider>().size.x - 1.3f) / 2) + ((boxCollider.size.x - 1.3f) / 2);
                 BlockScales *= ScaleRatio;
 
-                // 계산
-                this.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
-
                 // 블록 붙이기
-                this.transform.position = others.transform.parent.transform.position + (snap * BlockScales);
+                this.transform.localRotation = Quaternion.Euler(new Vector3(0, 180, 0));
+                this.transform.localPosition = others.transform.parent.transform.localPosition + (snap * BlockScales);
                 this.transform.SetParent(others.transform);
             }
         }
@@ -143,13 +139,10 @@ public class MoveObject : MonoBehaviour
             BlockScales = ((this.GetComponent<BoxCollider>().size.x - 1.3f) / 2) + ((boxCollider.size.x - 1.3f) / 2);
             BlockScales *= ScaleRatio;
 
-            // 방향 맞추기
-            this.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
-
             // 블록 붙이기
-            this.transform.position = others.transform.parent.transform.position + (snap * BlockScales);
+            this.transform.localRotation = Quaternion.Euler(new Vector3(0, 180, 0));
+            this.transform.localPosition = others.transform.parent.transform.localPosition + (snap * BlockScales);  
             this.transform.SetParent(others.transform);
-
             others = null;
         }
     }

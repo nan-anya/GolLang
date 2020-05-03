@@ -4,23 +4,27 @@ using UnityEngine;
 
 public class ButtonClick : MonoBehaviour
 {
-    public GameObject ForEndBlock;
     public GameObject ForStartBlock;
     public GameObject IfStartBlock;
-    public GameObject IfEndBlock;
     public GameObject ElseBlock;
-    public GameObject GenerateBlock;
-    public GameObject AttackKickBlock;
-
-    public GameObject IBlock;
-  
     public GameObject PlusBlock;
     public GameObject MinusBlock;
     public GameObject MultBlock;
     public GameObject DivBlock;
-    public GameObject EqaulBlock;
+    public GameObject EqualBlock;
     public GameObject NotEqualBlock;
     public GameObject ModBlock;
+
+    public GameObject Attack01Block;
+    public GameObject Attack02Block;
+    public GameObject Attack03Block;
+
+    public GameObject IBlock;
+    public GameObject JBlock;
+    public GameObject KBlock;
+    public GameObject ABlock;
+    public GameObject BBlock;
+    public GameObject CBlock;
 
     public GameObject Number1;
     public GameObject Number2;
@@ -35,10 +39,12 @@ public class ButtonClick : MonoBehaviour
 
     private int count = 0;
 
+    List<GameObject> blockList = new List<GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -47,6 +53,85 @@ public class ButtonClick : MonoBehaviour
         
     }
 
+    GameObject CheckBlock(string blockName)
+    {
+        switch(blockName)
+        {
+            case "For":
+                return ForStartBlock;
+            case "If":
+                return IfStartBlock;
+            case "Else":
+                return ElseBlock;
+            case "Plus":
+                return PlusBlock;
+            case "Minus":
+                return MinusBlock;
+            case "Mult":
+                return MultBlock;
+            case "Div":
+                return DivBlock;
+            case "Equal":
+                return EqualBlock;
+            case "NotEqual":
+                return NotEqualBlock;
+            case "Mod":
+                return ModBlock;
+            case "Attack01":
+                return Attack01Block;
+            case "Attack02":
+                return Attack02Block;
+            case "Attack03":
+                return Attack03Block;
+            case "IBlock":
+                return IBlock;
+            case "JBlock":
+                return JBlock;
+            case "KBlock":
+                return KBlock;
+            case "ABlock":
+                return ABlock;
+            case "BBlock":
+                return BBlock;
+            case "CBlock":
+                return CBlock;
+            case "Number0":
+                return Number0;
+            case "Number1":
+                return Number1;
+            case "Number2":
+                return Number2;
+            case "Number3":
+                return Number3;
+            case "Number4":
+                return Number4;
+            case "Number5":
+                return Number5;
+            case "Number6":
+                return Number6;
+            case "Number7":
+                return Number7;
+            case "Number8":
+                return Number8;
+            case "Number9":
+                return Number9;
+        }
+        return null;
+    }
+
+    public void GenerateBlock(string name)
+    {
+        Debug.Log(name + " Block");
+
+        GameObject NewBlock;
+        GameObject TargetBlock = CheckBlock(name);
+
+        NewBlock = (GameObject)Instantiate(TargetBlock);
+        NewBlock.transform.name += (count++);
+        NewBlock.transform.parent = GameObject.Find("WorkSpace").transform;
+        NewBlock.transform.localPosition = Vector3.zero;
+        NewBlock.transform.localRotation = Quaternion.Euler(new Vector3(0, 180, 0));
+    }
 
     // 블록 생성
     public void ForStartInst()
@@ -59,11 +144,9 @@ public class ButtonClick : MonoBehaviour
         ForBlock.transform.name += (count++);
         ForBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         ForBlock.transform.localPosition = Vector3.zero;
+        ForBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
-    public void ForEndInst()
-    {
-        Debug.Log("Click");
-    }
+
     public void IfStartInst()
     {
         GameObject IfBlock;
@@ -72,11 +155,7 @@ public class ButtonClick : MonoBehaviour
         IfBlock.transform.name += (count++);
         IfBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         IfBlock.transform.localPosition = Vector3.zero;
-    }
-
-    public void IfEndInst()
-    {
-
+        IfBlock.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void ElseInst()
@@ -87,31 +166,31 @@ public class ButtonClick : MonoBehaviour
         ElseB.transform.name += (count++);
         ElseB.transform.parent = GameObject.Find("WorkSpace").transform;
         ElseB.transform.localPosition = Vector3.zero;
-    }
-
-    public void GenerateInst()
-    {
-
+        ElseB.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void AttackKickInst()
     {
         GameObject AttackKB;
 
-        AttackKB = (GameObject)Instantiate(AttackKickBlock);
+        AttackKB = (GameObject)Instantiate(Attack01Block);
         AttackKB.transform.name += (count++);
         AttackKB.transform.parent = GameObject.Find("WorkSpace").transform;
         AttackKB.transform.localPosition = Vector3.zero;
+        AttackKB.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void VarIBlockInst()
     {
         GameObject VarIB;
 
+        Debug.Log("I BLOCK");
+
         VarIB = (GameObject)Instantiate(IBlock);
         VarIB.transform.name += (count++);
         VarIB.transform.parent = GameObject.Find("WorkSpace").transform;
         VarIB.transform.localPosition = Vector3.zero;
+        VarIB.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void PlusInst()
@@ -122,6 +201,7 @@ public class ButtonClick : MonoBehaviour
         PlusB.transform.name += (count++);
         PlusB.transform.parent = GameObject.Find("WorkSpace").transform;
         PlusB.transform.localPosition = Vector3.zero;
+        PlusB.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void MinusInst()
@@ -132,6 +212,7 @@ public class ButtonClick : MonoBehaviour
         MinusB.transform.name += (count++);
         MinusB.transform.parent = GameObject.Find("WorkSpace").transform;
         MinusB.transform.localPosition = Vector3.zero;
+        MinusB.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void MultInst()
@@ -142,6 +223,7 @@ public class ButtonClick : MonoBehaviour
         MultB.transform.name += (count++);
         MultB.transform.parent = GameObject.Find("WorkSpace").transform;
         MultB.transform.localPosition = Vector3.zero;
+        MultB.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void DivInst()
@@ -152,6 +234,7 @@ public class ButtonClick : MonoBehaviour
         DivB.transform.name += (count++);
         DivB.transform.parent = GameObject.Find("WorkSpace").transform;
         DivB.transform.localPosition = Vector3.zero;
+        DivB.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void ModInst()
@@ -162,16 +245,18 @@ public class ButtonClick : MonoBehaviour
         ModB.transform.name += (count++);
         ModB.transform.parent = GameObject.Find("WorkSpace").transform;
         ModB.transform.localPosition = Vector3.zero;
+        ModB.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void EqualInst()
     {
         GameObject EqualB;
 
-        EqualB = (GameObject)Instantiate(EqaulBlock);
+        EqualB = (GameObject)Instantiate(EqualBlock);
         EqualB.transform.name += (count++);
         EqualB.transform.parent = GameObject.Find("WorkSpace").transform;
         EqualB.transform.localPosition = Vector3.zero;
+        EqualB.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void NotEqualnst()
@@ -182,6 +267,7 @@ public class ButtonClick : MonoBehaviour
         NotEqualB.transform.name += (count++);
         NotEqualB.transform.parent = GameObject.Find("WorkSpace").transform;
         NotEqualB.transform.localPosition = Vector3.zero;
+        NotEqualB.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void NumberInst1()
@@ -192,6 +278,7 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.name += (count++);
         NumberBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NumberBlock.transform.localPosition = Vector3.zero;
+        NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
     public void NumberInst2()
     {
@@ -201,6 +288,7 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.name += (count++);
         NumberBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NumberBlock.transform.localPosition = Vector3.zero;
+        NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
     public void NumberInst3()
     {
@@ -210,6 +298,7 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.name += (count++);
         NumberBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NumberBlock.transform.localPosition = Vector3.zero;
+        NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
     public void NumberInst4()
     {
@@ -219,6 +308,7 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.name += (count++);
         NumberBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NumberBlock.transform.localPosition = Vector3.zero;
+        NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
     public void NumberInst5()
     {
@@ -228,6 +318,7 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.name += (count++);
         NumberBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NumberBlock.transform.localPosition = Vector3.zero;
+        NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
     public void NumberInst6()
     {
@@ -237,6 +328,7 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.name += (count++);
         NumberBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NumberBlock.transform.localPosition = Vector3.zero;
+        NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
     public void NumberInst7()
     {
@@ -246,6 +338,7 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.name += (count++);
         NumberBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NumberBlock.transform.localPosition = Vector3.zero;
+        NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
     public void NumberInst8()
     {
@@ -255,6 +348,7 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.name += (count++);
         NumberBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NumberBlock.transform.localPosition = Vector3.zero;
+        NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
     public void NumberInst9()
     {
@@ -264,6 +358,7 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.name += (count++);
         NumberBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NumberBlock.transform.localPosition = Vector3.zero;
+        NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
     public void NumberInst0()
     {
@@ -273,5 +368,6 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.name += (count++);
         NumberBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NumberBlock.transform.localPosition = Vector3.zero;
+        NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 }
