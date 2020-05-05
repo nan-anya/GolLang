@@ -164,6 +164,7 @@ public class GolLangInterpreter : MonoBehaviour
             {
                 excuteLine(i);
             }
+            //TODO break있어야함?
             else if (lineCheck(i.line) == lineKind.FOR)
             {
                 GolLangNode tempGN = new GolLangNode(new GolLangLine(i.line.keywords.GetRange(1, i.line.keywords.Count - 1)));
@@ -202,6 +203,7 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                 }
             }
+            //TODO 버그 있을지도
             else if (lineCheck(i.line) == lineKind.IF)
             {
                 List<GolLangNode> ifFamily = new List<GolLangNode>();
