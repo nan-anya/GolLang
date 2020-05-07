@@ -4,28 +4,48 @@ using UnityEngine;
 
 public class ButtonClick : MonoBehaviour
 {
-    public GameObject ForStartBlock;
-    public GameObject IfStartBlock;
+    //Reserved Word
+    public GameObject ForBlock;
+    public GameObject IfBlock;
+    public GameObject ElseIfBlock;
     public GameObject ElseBlock;
-    public GameObject PlusBlock;
-    public GameObject MinusBlock;
-    public GameObject MultBlock;
-    public GameObject DivBlock;
+
+    //Int and Bool Compare
     public GameObject EqualBlock;
     public GameObject NotEqualBlock;
+
+    //Int only Compare
+    public GameObject GreaterThenBlock;
+    public GameObject LessThenBlock;
+    public GameObject GreaterEqualBlock;
+    public GameObject LessEqualBlock;
+
+    //Calculate
+    public GameObject PlusBlock;
+    public GameObject MinusBlock;
+    public GameObject MulBlock;
+    public GameObject DivBlock;
     public GameObject ModBlock;
 
-    public GameObject Attack01Block;
-    public GameObject Attack02Block;
-    public GameObject Attack03Block;
+    //Negative Num
+    public GameObject NegativeBlock;
 
-    public GameObject IBlock;
-    public GameObject JBlock;
-    public GameObject KBlock;
-    public GameObject ABlock;
-    public GameObject BBlock;
-    public GameObject CBlock;
+    //Logical
+    public GameObject AndBlock;
+    public GameObject OrBlock;
+    public GameObject NotBlock;
 
+    //Bracket
+    public GameObject BracketOpenBlock;
+    public GameObject BracketCloseBlock;
+
+    //Assignment
+    public GameObject AssignmentBlock;
+
+    //ETC
+    public GameObject CommaBlock;
+
+    //Const Int
     public GameObject Number1;
     public GameObject Number2;
     public GameObject Number3;
@@ -36,6 +56,35 @@ public class ButtonClick : MonoBehaviour
     public GameObject Number8;
     public GameObject Number9;
     public GameObject Number0;
+
+    //Const Bool
+    public GameObject BoolTrueBlock;
+    public GameObject BoolFalseBlock;
+
+    //Int Variable
+    public GameObject IntVarABlock;
+    public GameObject IntVarBBlock;
+    public GameObject IntVarCBlock;
+    public GameObject IntVarIBlock;
+    public GameObject IntVarJBlock;
+    public GameObject IntVarKBlock;
+
+    //Bool Variable
+    public GameObject BoolVarWBlock;
+    public GameObject BoolVarXBlock;
+    public GameObject BoolVarYBlock;
+    public GameObject BoolVarZBlock;
+
+    //Function
+    public GameObject FuncMeleeAttackBlock;
+    public GameObject FuncRangeAttackBlock;
+    public GameObject FuncObserveBlock;
+    public GameObject FuncDefenceBlock;
+    public GameObject FuncEnergyChargeBlock;
+    public GameObject FuncBreakShieldBlock;
+    public GameObject FuncRepairBlock;
+
+
 
     private int count = 0;
 
@@ -57,46 +106,52 @@ public class ButtonClick : MonoBehaviour
     {
         switch(blockName)
         {
-            case "For":
-                return ForStartBlock;
-            case "If":
-                return IfStartBlock;
-            case "Else":
+            case "ForBlock":
+                return ForBlock;
+            case "IfBlock":
+                return IfBlock;
+            case "ElseIfBlock":
+                return ElseIfBlock;
+            case "ElseBlock":
                 return ElseBlock;
-            case "Plus":
-                return PlusBlock;
-            case "Minus":
-                return MinusBlock;
-            case "Mult":
-                return MultBlock;
-            case "Div":
-                return DivBlock;
-            case "Equal":
+            case "EqualBlock":
                 return EqualBlock;
-            case "NotEqual":
+            case "NotEqualBlock":
                 return NotEqualBlock;
-            case "Mod":
+            case "GreaterThenBlock":
+                return GreaterThenBlock;
+            case "LessThenBlock":
+                return LessThenBlock;
+            case "GreaterEqualBlock":
+                return GreaterEqualBlock;
+            case "LessEqualBlock":
+                return LessEqualBlock;
+            case "PlusBlock":
+                return PlusBlock;
+            case "MinusBlock":
+                return MinusBlock;
+            case "MulBlock":
+                return MulBlock;
+            case "DivBlock":
+                return DivBlock;
+            case "ModBlock":
                 return ModBlock;
-            case "Attack01":
-                return Attack01Block;
-            case "Attack02":
-                return Attack02Block;
-            case "Attack03":
-                return Attack03Block;
-            case "IBlock":
-                return IBlock;
-            case "JBlock":
-                return JBlock;
-            case "KBlock":
-                return KBlock;
-            case "ABlock":
-                return ABlock;
-            case "BBlock":
-                return BBlock;
-            case "CBlock":
-                return CBlock;
-            case "Number0":
-                return Number0;
+            case "NegativeBlock":
+                return NegativeBlock;
+            case "AndBlock":
+                return AndBlock;
+            case "OrBlock":
+                return OrBlock;
+            case "NotBlock":
+                return NotBlock;
+            case "BracketOpenBlock":
+                return BracketOpenBlock;
+            case "BracketCloseBlock":
+                return BracketCloseBlock;
+            case "AssignmentBlock":
+                return AssignmentBlock;
+            case "CommaBlock":
+                return CommaBlock;
             case "Number1":
                 return Number1;
             case "Number2":
@@ -115,6 +170,46 @@ public class ButtonClick : MonoBehaviour
                 return Number8;
             case "Number9":
                 return Number9;
+            case "Number0":
+                return Number0;
+            case "BoolTrueBlock":
+                return BoolTrueBlock;
+            case "BoolFalseBlock":
+                return BoolFalseBlock;
+            case "IntVarABlock":
+                return IntVarABlock;
+            case "IntVarBBlock":
+                return IntVarBBlock;
+            case "IntVarCBlock":
+                return IntVarCBlock;
+            case "IntVarIBlock":
+                return IntVarIBlock;
+            case "IntVarJBlock":
+                return IntVarJBlock;
+            case "IntVarKBlock":
+                return IntVarKBlock;
+            case "BoolVarWBlock":
+                return BoolVarWBlock;
+            case "BoolVarXBlock":
+                return BoolVarXBlock;
+            case "BoolVarYBlock":
+                return BoolVarYBlock;
+            case "BoolVarZBlock":
+                return BoolVarZBlock;
+            case "FuncMeleeAttackBlock":
+                return FuncMeleeAttackBlock;
+            case "FuncRangeAttackBlock":
+                return FuncRangeAttackBlock;
+            case "FuncObserveBlock":
+                return FuncObserveBlock;
+            case "FuncDefenceBlock":
+                return FuncDefenceBlock;
+            case "FuncEnergyChargeBlock":
+                return FuncEnergyChargeBlock;
+            case "FuncBreakShieldBlock":
+                return FuncBreakShieldBlock;
+            case "FuncRepairBlock":
+                return FuncRepairBlock;
         }
         return null;
     }
