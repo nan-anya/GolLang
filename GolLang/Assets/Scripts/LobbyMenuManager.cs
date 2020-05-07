@@ -32,14 +32,34 @@ public class LobbyMenuManager : MonoBehaviour
 
     public void GameStartButton()
     {
-        DisableLeftController();
+        // SetLeftController();
 
         GameObject.Find("StartCanvas").SetActive(false);
+
+        GameObject.Find("PopupUI").transform.Find("StartCanvasUI").gameObject.SetActive(true);
+        GameObject.Find("PopupUI").transform.Find("StartCanvasUI").SetParent(GameObject.Find("[CameraRig]").transform.Find("Camera").transform);
+        GameObject.Find("[CameraRig]").transform.Find("Camera").transform.Find("StartCanvasUI").localPosition = new Vector3(0, -0.5f, 2.5f);
+        GameObject.Find("[CameraRig]").transform.Find("Camera").transform.Find("StartCanvasUI").localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
 
         SetGameState(GameState.InGame);
     }
 
-    void DisableLeftController()
+    public void TeleportPlayer()
+    {
+        //Transform cameraRigTransform = GameObject.Find("[CameraRig]").transform;
+        //Transform golem = GameObject.Find("Golem").transform;
+
+        //cameraRigTransform.position = new Vector3(golem.position.x, golem.position.y - 1f, golem.position.z + 1.25f);
+    }
+
+
+    public void DisableLeftController()
+    {
+        GameObject.Find("Controller (left)").GetComponent<LaserPoint>().enabled = false;
+        GameObject.Find("Controller (left)").GetComponent<GrabBlock>().enabled = false;
+    }
+    
+    public void SetLeftController()
     {
         GameObject.Find("Controller (left)").GetComponent<LaserPoint>().enabled = true;
         GameObject.Find("Controller (left)").GetComponent<GrabBlock>().enabled = true;
@@ -67,7 +87,6 @@ public class LobbyMenuManager : MonoBehaviour
     {
         GameObject.Find("Golem").transform.Find("WorkUICanvas").gameObject.SetActive(true);
         GameObject.Find("Golem").transform.Find("MagicButton").gameObject.SetActive(false);
-
     }
 
     public void MagicCircleClose()
