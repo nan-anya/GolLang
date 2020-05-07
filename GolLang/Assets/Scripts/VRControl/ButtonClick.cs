@@ -133,6 +133,7 @@ public class ButtonClick : MonoBehaviour
         NewBlock.transform.localRotation = Quaternion.Euler(new Vector3(0, 180, 0));
     }
 
+    /*
     // 블록 생성
     public void ForStartInst()
     {
@@ -370,4 +371,5 @@ public class ButtonClick : MonoBehaviour
         NumberBlock.transform.localPosition = Vector3.zero;
         NumberBlock.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
+    */
 }

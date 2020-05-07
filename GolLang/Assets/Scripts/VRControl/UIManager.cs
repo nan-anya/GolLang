@@ -4,6 +4,21 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    public enum FadeState
+    {
+        FadeOutLeft,
+        FadeInRight,
+        FadeOutRight,
+        FadeInLeft
+    }
+
+    public FadeState fsfs = FadeState.FadeInLeft;
+
+    public void FADE()
+    {
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,9 +28,6 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.I))
-        {
-            // Block UI On
-        }
+        
     }
 }
