@@ -10,8 +10,9 @@ public class RTrigger : MonoBehaviour
    
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag.Equals("Block") && attachable)
+        if (other.gameObject.tag.Contains("Block") && attachable)
         {
+            print(other.name);
             transform.parent.GetComponent<Block>().rightTrigger(other.gameObject);
         }
     }

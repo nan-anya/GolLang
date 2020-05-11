@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 6490956824084412974}
   - component: {fileID: 8667411648380017836}
   - component: {fileID: 1817827770202952250}
+  - component: {fileID: 7833785477379108671}
   m_Layer: 0
-  m_Name: Operator_BT
+  m_Name: Operator_GT
   m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,6 +110,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockKind: 0
   node: {fileID: 0}
+--- !u!54 &7833785477379108671
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8410812034888756255}
+  serializedVersion: 2
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8581733262306324956
 GameObject:
   m_ObjectHideFlags: 0

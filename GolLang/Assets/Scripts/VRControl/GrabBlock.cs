@@ -88,6 +88,7 @@ public class GrabBlock : MonoBehaviour
 
         var joint = AddFixedJoint();
         joint.connectedBody = objectInHand.GetComponent<Rigidbody>();
+        objectInHand.tag = "Grabed";
     }
 
     private void ReleaseObject()
@@ -102,10 +103,12 @@ public class GrabBlock : MonoBehaviour
 
             // 블럭 놓고 조립
             // 이름조심
-            GameObject.Find(objectInHand.name).GetComponent<MoveObject>().CheckReleased();
+            //GameObject.Find(objectInHand.name).GetComponent<Block>().CheckReleased();
             GameObject.Find(objectInHand.name).transform.localRotation = Quaternion.Euler(new Vector3(0, 180, 0));
             GameObject.Find(objectInHand.name).transform.localPosition = new Vector3(GameObject.Find(objectInHand.name).transform.localPosition.x, GameObject.Find(objectInHand.name).transform.localPosition.y, 0);
         }
+
+        objectInHand.tag = "Block";
 
         objectInHand = null;
     }

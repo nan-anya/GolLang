@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 862339864595638934}
   - component: {fileID: 862339864595638933}
   - component: {fileID: 862339864595638922}
+  - component: {fileID: 7258738352676253793}
   m_Layer: 0
   m_Name: Var_i
   m_TagString: Block
@@ -226,4 +227,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba65a0460bc151d468a1d7b272b83d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blockKind: 0
   node: {fileID: 0}
+--- !u!54 &7258738352676253793
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862339864595638929}
+  serializedVersion: 2
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

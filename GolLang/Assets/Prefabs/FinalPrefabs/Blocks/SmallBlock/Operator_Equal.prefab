@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6067537558970165218}
   - component: {fileID: 5425655754306043698}
   - component: {fileID: 8177675794201634804}
+  - component: {fileID: 5733581290906479750}
   m_Layer: 0
   m_Name: Operator_Equal
   m_TagString: Block
@@ -109,6 +110,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockKind: 0
   node: {fileID: 0}
+--- !u!54 &5733581290906479750
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4349506961863263760}
+  serializedVersion: 2
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &6090371304479187811
 GameObject:
   m_ObjectHideFlags: 0

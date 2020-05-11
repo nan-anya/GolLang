@@ -198,7 +198,7 @@ public class GolLangLine
 
         foreach (GolLangKeyword i in keywords)
         {
-            if (i.nameOrValue.Equals(""))
+            if (i.nameOrValue.Contains(""))
             {
                 switch (i.keyword)
                 {

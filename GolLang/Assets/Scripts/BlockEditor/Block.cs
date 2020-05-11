@@ -65,7 +65,7 @@ public class Block : MonoBehaviour
 
     }
 
-    void initBlock(BlockKind blockKind)
+    public void initBlock(BlockKind blockKind)
     {
         switch (blockKind)
         {
@@ -578,14 +578,16 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    print(m.mesh.name);
+
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -601,12 +603,16 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        print("왼쪽 블록이 잘못됨");
+
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    print("오른쪽에 붙일 수 있는 종류가 아님");
+    
+                    //Destroy(right);
                 }
 
                 break;
@@ -621,14 +627,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -644,12 +650,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -664,14 +670,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -687,12 +693,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -708,14 +714,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -731,12 +737,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -751,14 +757,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -774,12 +780,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -793,14 +799,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -816,12 +822,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -834,14 +840,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -857,12 +863,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -875,14 +881,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -898,12 +904,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -916,14 +922,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -939,12 +945,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -958,14 +964,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -981,12 +987,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -999,14 +1005,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1022,12 +1028,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1040,14 +1046,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1063,12 +1069,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1081,14 +1087,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1104,12 +1110,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1122,14 +1128,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1145,12 +1151,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1164,14 +1170,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1187,12 +1193,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1206,14 +1212,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1229,12 +1235,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1247,14 +1253,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -1270,12 +1276,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1288,14 +1294,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1311,12 +1317,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1332,14 +1338,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1355,12 +1361,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1374,14 +1380,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1397,12 +1403,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1418,14 +1424,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1441,12 +1447,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1461,14 +1467,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
                     b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1484,12 +1490,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1505,14 +1511,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1528,12 +1534,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1548,14 +1554,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1571,12 +1577,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1591,14 +1597,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1614,12 +1620,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1634,14 +1640,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1657,12 +1663,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1677,14 +1683,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1700,12 +1706,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1719,14 +1725,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1742,12 +1748,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1762,14 +1768,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1785,12 +1791,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1805,14 +1811,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1828,12 +1834,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1848,14 +1854,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1871,12 +1877,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1891,14 +1897,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1914,12 +1920,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1933,14 +1939,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.AND || b.blockKind == BlockKind.OR ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1956,12 +1962,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -1974,14 +1980,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.AND || b.blockKind == BlockKind.OR ||
                     b.blockKind == BlockKind.BCL)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -1997,12 +2003,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2018,14 +2024,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.BCL ||
                     b.blockKind == BlockKind.ASS)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -2041,12 +2047,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2060,14 +2066,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.BCL ||
                     b.blockKind == BlockKind.ASS)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -2083,12 +2089,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2103,14 +2109,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.BCL ||
                     b.blockKind == BlockKind.ASS)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -2126,12 +2132,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2146,14 +2152,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.BCL ||
                     b.blockKind == BlockKind.ASS)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -2169,12 +2175,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2189,14 +2195,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.BCL ||
                     b.blockKind == BlockKind.ASS)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -2212,12 +2218,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2232,14 +2238,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.BCL ||
                     b.blockKind == BlockKind.ASS)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -2255,12 +2261,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2275,14 +2281,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.BCL ||
                     b.blockKind == BlockKind.ASS)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -2298,12 +2304,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2317,14 +2323,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.BCL ||
                     b.blockKind == BlockKind.ASS)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -2340,12 +2346,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2359,14 +2365,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.BCL ||
                     b.blockKind == BlockKind.ASS)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -2382,12 +2388,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2401,14 +2407,14 @@ public class Block : MonoBehaviour
                     b.blockKind == BlockKind.BCL ||
                     b.blockKind == BlockKind.ASS)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02
                             offset = 0.0508F;
@@ -2424,12 +2430,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2440,14 +2446,14 @@ public class Block : MonoBehaviour
                 //뒤에 붙일 수 있는 블록이면
                 if (b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -2463,12 +2469,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2477,14 +2483,14 @@ public class Block : MonoBehaviour
 
                 if (b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -2500,12 +2506,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2514,14 +2520,14 @@ public class Block : MonoBehaviour
 
                 if (b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -2537,12 +2543,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2551,14 +2557,14 @@ public class Block : MonoBehaviour
 
                 if (b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -2574,12 +2580,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2588,14 +2594,14 @@ public class Block : MonoBehaviour
 
                 if (b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -2611,12 +2617,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2625,14 +2631,14 @@ public class Block : MonoBehaviour
 
                 if (b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -2648,12 +2654,12 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
@@ -2662,14 +2668,14 @@ public class Block : MonoBehaviour
 
                 if (b.blockKind == BlockKind.BOP)
                 {
-                    if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                     {
-                        if (m.mesh.name.Equals("LongBlock1"))
+                        if (m.mesh.name.Contains("LongBlock1"))
                         {
                             //2.54 * 0.02 * 2
                             offset = 0.1016F;
                         }
-                        else if (m.mesh.name.Equals("SmallBlock"))
+                        else if (m.mesh.name.Contains("SmallBlock"))
                         {
                             //2.54 * 0.02 * 1.5
                             offset = 0.0762F;
@@ -2685,18 +2691,18 @@ public class Block : MonoBehaviour
                     //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
                     else
                     {
-                        Destroy(right);
+                        //Destroy(right);
                     }
                 }
                 else
                 {
-                    Destroy(right);
+                    //Destroy(right);
                 }
 
                 break;
 
             default :
-                Destroy(right);
+                //Destroy(right);
                 
                 break;
         }
@@ -2720,14 +2726,14 @@ public class Block : MonoBehaviour
         {
             MeshFilter thisMesh = gameObject.GetComponent<MeshFilter>();
 
-            if (thisMesh.mesh.name.Equals("LongBlock2"))
+            if (thisMesh.mesh.name.Contains("LongBlock2"))
             {
-                if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("LongBlock2"))
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("LongBlock2"))
                 {
                     //2.54 * 0.02
                     offsetX = 0.0508F;
                 }
-                else if (m.mesh.name.Equals("SmallBlock"))
+                else if (m.mesh.name.Contains("SmallBlock"))
                 {
                     //2.54 * 0.02 * 0.5
                     offsetX = 0.0254F;
@@ -2741,14 +2747,14 @@ public class Block : MonoBehaviour
 
                 node.adjustSiblingTrigger();
             }
-            else if (thisMesh.mesh.name.Equals("LongBlock3"))
+            else if (thisMesh.mesh.name.Contains("LongBlock3"))
             {
-                if (m.mesh.name.Equals("LongBlock1") || m.mesh.name.Equals("LongBlock2"))
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("LongBlock2"))
                 {
                     //2.54 * 0.02 * 1.25
                     offsetX = 0.0635F;
                 }
-                else if (m.mesh.name.Equals("SmallBlock"))
+                else if (m.mesh.name.Contains("SmallBlock"))
                 {
                     //2.54 * 0.02 * 0.75
                     offsetX = 0.0381F;
@@ -2765,12 +2771,12 @@ public class Block : MonoBehaviour
             //LongBlock1과 SmallBlock인 블록은 자식을 가질 수 없다.
             else
             {
-                Destroy(child);
+                //Destroy(child);
             }
         }
         else
         {
-            Destroy(child);
+            //Destroy(child);
         }
     }
 
@@ -2792,16 +2798,16 @@ public class Block : MonoBehaviour
         {
             MeshFilter thisMesh = gameObject.GetComponent<MeshFilter>();
 
-            if (thisMesh.mesh.name.Equals("LongBlock1") || thisMesh.mesh.name.Equals("LongBlock2"))
+            if (thisMesh.mesh.name.Contains("LongBlock1") || thisMesh.mesh.name.Contains("LongBlock2"))
             {
-                if (m.mesh.name.Equals("LongBlock1") || thisMesh.mesh.name.Equals("LongBlock2"))
+                if (m.mesh.name.Contains("LongBlock1") || thisMesh.mesh.name.Contains("LongBlock2"))
                 {
                     offsetX = 0.0f;
 
                     //2.54 * 0.02 * height
                     offsetY = 0.0508f * node.height();
                 }
-                else if (m.mesh.name.Equals("LongBlock3"))
+                else if (m.mesh.name.Contains("LongBlock3"))
                 {
                     //2.54 8 0.02 * 0.25
                     offsetX = -0.0127f;
@@ -2809,7 +2815,7 @@ public class Block : MonoBehaviour
                     //2.54 * 0.02 * height
                     offsetY = 0.0508f * node.height();
                 }
-                else if (m.mesh.name.Equals("SmallBlock"))
+                else if (m.mesh.name.Contains("SmallBlock"))
                 {
                     //2.54 8 0.02 * 0.5
                     offsetX = -0.0254f;
@@ -2819,12 +2825,12 @@ public class Block : MonoBehaviour
                 }
                 else
                 {
-                    Destroy(sibling);
+                    //Destroy(sibling);
                 }
             }
-            else if (thisMesh.mesh.name.Equals("LongBlock3"))
+            else if (thisMesh.mesh.name.Contains("LongBlock3"))
             {
-                if (m.mesh.name.Equals("LongBlock1") || thisMesh.mesh.name.Equals("LongBlock2"))
+                if (m.mesh.name.Contains("LongBlock1") || thisMesh.mesh.name.Contains("LongBlock2"))
                 {
                     //2.54 8 0.02 * 0.25
                     offsetX = 0.0127f;
@@ -2832,14 +2838,14 @@ public class Block : MonoBehaviour
                     //2.54 * 0.02 * height
                     offsetY = 0.0508f * node.height();
                 }
-                else if (m.mesh.name.Equals("LongBlock3"))
+                else if (m.mesh.name.Contains("LongBlock3"))
                 {
                     offsetX = 0;
 
                     //2.54 * 0.02 * height
                     offsetY = 0.0508f * node.height();
                 }
-                else if (m.mesh.name.Equals("SmallBlock"))
+                else if (m.mesh.name.Contains("SmallBlock"))
                 {
                     //2.54 8 0.02 * 0.25
                     offsetX = -0.0127f;
@@ -2849,12 +2855,12 @@ public class Block : MonoBehaviour
                 }
                 else
                 {
-                    Destroy(sibling);
+                    //Destroy(sibling);
                 }
             }
-            else if (thisMesh.mesh.name.Equals("SmallBlock"))
+            else if (thisMesh.mesh.name.Contains("SmallBlock"))
             {
-                if (m.mesh.name.Equals("LongBlock1") || thisMesh.mesh.name.Equals("LongBlock2"))
+                if (m.mesh.name.Contains("LongBlock1") || thisMesh.mesh.name.Contains("LongBlock2"))
                 {
                     //2.54 8 0.02 * 0.5
                     offsetX = 0.0254f;
@@ -2862,7 +2868,7 @@ public class Block : MonoBehaviour
                     //2.54 * 0.02 * height
                     offsetY = 0.0508f * node.height();
                 }
-                else if (m.mesh.name.Equals("LongBlock3"))
+                else if (m.mesh.name.Contains("LongBlock3"))
                 {
                     //2.54 8 0.02 * 0.25
                     offsetX = 0.0127f;
@@ -2870,7 +2876,7 @@ public class Block : MonoBehaviour
                     //2.54 * 0.02 * height
                     offsetY = 0.0508f * node.height();
                 }
-                else if (m.mesh.name.Equals("SmallBlock"))
+                else if (m.mesh.name.Contains("SmallBlock"))
                 {
                     offsetX = 0;
 
@@ -2879,12 +2885,12 @@ public class Block : MonoBehaviour
                 }
                 else
                 {
-                    Destroy(sibling);
+                    //Destroy(sibling);
                 }
             }
             else
             {
-                Destroy(sibling);
+                //Destroy(sibling);
             }
 
             sibling.transform.position = new Vector3(gameObject.transform.position.x - offsetX, gameObject.transform.position.y - offsetY, gameObject.transform.position.z);
@@ -2897,7 +2903,7 @@ public class Block : MonoBehaviour
         }
         else
         {
-            Destroy(sibling);
+            //Destroy(sibling);
         }
     }
 }

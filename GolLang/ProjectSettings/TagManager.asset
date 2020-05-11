@@ -9,6 +9,7 @@ TagManager:
   - ChildTrigger
   - SiblingTrigger
   - Block
+  - Grabed
   layers:
   - Default
   - TransparentFX

@@ -10,7 +10,7 @@ public class STrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {   
-        if (other.gameObject.tag.Equals("Block") && attachable)
+        if (other.gameObject.tag.Contains("Block") && attachable)
         {
             transform.parent.GetComponent<Block>().siblingTrigger(other.gameObject);
         }

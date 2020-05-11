@@ -10,7 +10,7 @@ public class CTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag.Equals("Block") && attachable)
+        if (other.gameObject.tag.Contains("Block") && attachable)
         {
             transform.parent.GetComponent<Block>().childTrigger(other.gameObject);
         }

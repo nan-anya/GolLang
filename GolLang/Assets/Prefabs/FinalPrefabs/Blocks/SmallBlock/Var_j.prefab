@@ -72,6 +72,7 @@ GameObject:
   - component: {fileID: 2868259660426598420}
   - component: {fileID: 6548688419891471773}
   - component: {fileID: 3681352165370407876}
+  - component: {fileID: -6584837053937987878}
   m_Layer: 0
   m_Name: Var_j
   m_TagString: Block
@@ -169,6 +170,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockKind: 0
   node: {fileID: 0}
+--- !u!54 &-6584837053937987878
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6484145389895278324}
+  serializedVersion: 2
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8671788466868819889
 GameObject:
   m_ObjectHideFlags: 0

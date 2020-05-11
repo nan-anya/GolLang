@@ -1213,7 +1213,7 @@ public class GolLangInterpreter : MonoBehaviour
                     if (operand1.type == dataType.VARI && (operand2.type == dataType.CONSTI || operand2.type == dataType.VARI) ||
                         operand1.type == dataType.VARB && (operand2.type == dataType.CONSTB || operand2.type == dataType.VARB))
                     {
-                        variables.Find(x => x.name.Equals(tempVar.line.keywords[0].nameOrValue)).value = operand2.value;
+                        variables.Find(x => x.name.Contains(tempVar.line.keywords[0].nameOrValue)).value = operand2.value;
                     }
                     else
                     {
@@ -1285,7 +1285,7 @@ public class GolLangInterpreter : MonoBehaviour
         }
         else if (node.line.keywords[0].keyword == GKeyword.CONSTB)
         {
-            if (node.line.keywords[0].nameOrValue.Equals("TRUE"))
+            if (node.line.keywords[0].nameOrValue.Contains("TRUE"))
             {
                 return new DataState(1, dataType.CONSTB);
             }
@@ -1297,7 +1297,7 @@ public class GolLangInterpreter : MonoBehaviour
         else if (node.line.keywords[0].keyword == GKeyword.VARI)
         {
 
-            GolLangVarData tempVar = variables.Find(x => x.name.Equals(node.line.keywords[0].nameOrValue));
+            GolLangVarData tempVar = variables.Find(x => x.name.Contains(node.line.keywords[0].nameOrValue));
 
             if (tempVar == null)
             {
@@ -1312,7 +1312,7 @@ public class GolLangInterpreter : MonoBehaviour
         }
         else if (node.line.keywords[0].keyword == GKeyword.VARB)
         {
-            GolLangVarData tempVar = variables.Find(x => x.name.Equals(node.line.keywords[0].nameOrValue));
+            GolLangVarData tempVar = variables.Find(x => x.name.Contains(node.line.keywords[0].nameOrValue));
 
             if (tempVar == null)
             {

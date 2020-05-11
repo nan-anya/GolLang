@@ -231,6 +231,169 @@ public class ButtonClick : MonoBehaviour
         NewBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NewBlock.transform.localPosition = Vector3.zero;
         //NewBlock.transform.localRotation = Quaternion.Euler(new Vector3(0, 180, 0));
+
+        switch (name)
+        {
+            case "StartHere":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.STARTHERE);
+                break;
+            case "Reserved_For":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.FOR);
+                break;
+            case "Reserved_If":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.IF);
+                break;
+            case "Reserved_ElseIf":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.ELIF);
+                break;
+            case "Reserved_Else":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.ELSE);
+                break;
+            case "Operator_Equal":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.EQ);
+                break;
+            case "Operator_NotEqual":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.NEQ);
+                break;
+            case "Operator_GT":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.GT);
+                break;
+            case "Operator_LT":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.LT);
+                break;
+            case "Operator_GE":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.GE);
+                break;
+            case "Operator_LE":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.LE);
+                break;
+            case "Operator_Plus":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.PLUS);
+                break;
+            case "Operator_Minus":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.MINUS);
+                break;
+            case "Operator_Mul":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.MUL);
+                break;
+            case "Operator_Div":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.DIV);
+                break;
+            case "Operator_Mod":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.MOD);
+                break;
+            case "Operator_Neg":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.NEG);
+                break;
+            case "Operator_And":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.AND);
+                break;
+            case "Operator_Or":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.OR);
+                break;
+            case "Operator_Not":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.NOT);
+                break;
+            case "Operator_Bop":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.BOP);
+                break;
+            case "Operator_Bcl":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.BCL);
+                break;
+            case "Operator_Ass":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.ASS);
+                break;
+            case "Operator_Comma":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.COMMA);
+                break;
+            case "Const_1":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTI_1);
+                break;
+            case "Const_2":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTI_2);
+                break;
+            case "Const_3":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTI_3);
+                break;
+            case "Const_4":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTI_4);
+                break;
+            case "Const_5":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTI_5);
+                break;
+            case "Const_6":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTI_6);
+                break;
+            case "Const_7":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTI_7);
+                break;
+            case "Const_8":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTI_8);
+                break;
+            case "Const_9":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTI_9);
+                break;
+            case "Const_0":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTI_0);
+                break;
+            case "Bool_True":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTB_TRUE);
+                break;
+            case "Bool_False":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.CONSTB_FALSE);
+                break;
+            case "Var_a":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.VARI_a);
+                break;
+            case "Var_b":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.VARI_b);
+                break;
+            case "Var_c":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.VARI_c);
+                break;
+            case "Var_i":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.VARI_i);
+                break;
+            case "Var_j":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.VARI_j);
+                break;
+            case "Var_k":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.VARI_k);
+                break;
+            case "Var_w":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.VARB_w);
+                break;
+            case "Var_x":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.VARB_x);
+                break;
+            case "Var_y":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.VARB_y);
+                break;
+            case "Var_z":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.VARB_z);
+                break;
+            case "Func_AttackMelee":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.FUNC_MELEEATTACK);
+                break;
+            case "Func_AttackRange":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.FUNC_RANGEATTACK);
+                break;
+            case "Func_Observe":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.FUNC_OBSERVE);
+                break;
+            case "Func_Defence":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.FUNC_DEFENCE);
+                break;
+            case "Func_EnergyCharge":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.FUNC_ENERGYCHARGE);
+                break;
+            case "Func_BreakShield":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.FUNC_BREAKSHIELD);
+                break;
+            case "Func_Repair":
+                NewBlock.GetComponent<Block>().initBlock(Block.BlockKind.FUNC_REPAIR);
+                break;
+        }
     }
 
     /*

@@ -22,7 +22,7 @@ public class GolLangKeyword
 
     public override string ToString()
     {
-        if(nameOrValue.Equals(""))
+        if(nameOrValue.Contains(""))
         {
             return keyword.ToString();
         }
