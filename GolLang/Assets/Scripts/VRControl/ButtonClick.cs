@@ -4,85 +4,88 @@ using UnityEngine;
 
 public class ButtonClick : MonoBehaviour
 {
+    //Meta
+    public GameObject StartHere;
+
     //Reserved Word
-    public GameObject ForBlock;
-    public GameObject IfBlock;
-    public GameObject ElseIfBlock;
-    public GameObject ElseBlock;
+    public GameObject Reserved_For;
+    public GameObject Reserved_If;
+    public GameObject Reserved_ElseIf;
+    public GameObject Reserved_Else;
 
     //Int and Bool Compare
-    public GameObject EqualBlock;
-    public GameObject NotEqualBlock;
+    public GameObject Operator_Equal;
+    public GameObject Operator_NotEqual;
 
     //Int only Compare
-    public GameObject GreaterThenBlock;
-    public GameObject LessThenBlock;
-    public GameObject GreaterEqualBlock;
-    public GameObject LessEqualBlock;
+    public GameObject Operator_GT;
+    public GameObject Operator_LT;
+    public GameObject Operator_GE;
+    public GameObject Operator_LE;
 
     //Calculate
-    public GameObject PlusBlock;
-    public GameObject MinusBlock;
-    public GameObject MulBlock;
-    public GameObject DivBlock;
-    public GameObject ModBlock;
+    public GameObject Operator_Plus;
+    public GameObject Operator_Minus;
+    public GameObject Operator_Mul;
+    public GameObject Operator_Div;
+    public GameObject Operator_Mod;
 
     //Negative Num
-    public GameObject NegativeBlock;
+    public GameObject Operator_Neg;
 
     //Logical
-    public GameObject AndBlock;
-    public GameObject OrBlock;
-    public GameObject NotBlock;
+    public GameObject Operator_And;
+    public GameObject Operator_Or;
+    public GameObject Operator_Not;
 
     //Bracket
-    public GameObject BracketOpenBlock;
-    public GameObject BracketCloseBlock;
+    public GameObject Operator_Bop;
+    public GameObject Operator_Bcl;
 
     //Assignment
-    public GameObject AssignmentBlock;
+    public GameObject Operator_Ass;
 
     //ETC
-    public GameObject CommaBlock;
+    public GameObject Operator_Comma;
 
     //Const Int
-    public GameObject Number1;
-    public GameObject Number2;
-    public GameObject Number3;
-    public GameObject Number4;
-    public GameObject Number5;
-    public GameObject Number6;
-    public GameObject Number7;
-    public GameObject Number8;
-    public GameObject Number9;
-    public GameObject Number0;
+    public GameObject Const_1;
+    public GameObject Const_2;
+    public GameObject Const_3;
+    public GameObject Const_4;
+    public GameObject Const_5;
+    public GameObject Const_6;
+    public GameObject Const_7;
+    public GameObject Const_8;
+    public GameObject Const_9;
+    public GameObject Const_0;
 
     //Const Bool
-    public GameObject BoolTrueBlock;
-    public GameObject BoolFalseBlock;
+    public GameObject Bool_True;
+    public GameObject Bool_False;
 
     //Int Variable
-    public GameObject IntVarABlock;
-    public GameObject IntVarBBlock;
-    public GameObject IntVarCBlock;
-    public GameObject IntVarIBlock;
-    public GameObject IntVarJBlock;
-    public GameObject IntVarKBlock;
+    public GameObject Var_a;
+    public GameObject Var_b;
+    public GameObject Var_c;
+    public GameObject Var_i;
+    public GameObject Var_j;
+    public GameObject Var_k;
 
     //Bool Variable
-    public GameObject BoolVarWBlock;
-    public GameObject BoolVarXBlock;
-    public GameObject BoolVarYBlock;
-    public GameObject BoolVarZBlock;
+    public GameObject Var_w;
+    public GameObject Var_x;
+    public GameObject Var_y;
+    public GameObject Var_z;
 
     //Function
-    public GameObject FuncMeleeAttackBlock;
-    public GameObject FuncRangeAttackBlock;
-    public GameObject FuncObserveBlock;
-    public GameObject FuncDefenceBlock;
-    public GameObject FuncEnergyChargeBlock;
-    public GameObject FuncBreakShieldBlock;
-    public GameObject FuncRepairBlock;
+    public GameObject Func_AttackMelee;
+    public GameObject Func_AttackRange;
+    public GameObject Func_Observe;
+    public GameObject Func_Defence;
+    public GameObject Func_EnergyCharge;
+    public GameObject Func_BreakShield;
+    public GameObject Func_Repair;
 
 
 
@@ -106,110 +109,112 @@ public class ButtonClick : MonoBehaviour
     {
         switch(blockName)
         {
-            case "ForBlock":
-                return ForBlock;
-            case "IfBlock":
-                return IfBlock;
-            case "ElseIfBlock":
-                return ElseIfBlock;
-            case "ElseBlock":
-                return ElseBlock;
-            case "EqualBlock":
-                return EqualBlock;
-            case "NotEqualBlock":
-                return NotEqualBlock;
-            case "GreaterThenBlock":
-                return GreaterThenBlock;
-            case "LessThenBlock":
-                return LessThenBlock;
-            case "GreaterEqualBlock":
-                return GreaterEqualBlock;
-            case "LessEqualBlock":
-                return LessEqualBlock;
-            case "PlusBlock":
-                return PlusBlock;
-            case "MinusBlock":
-                return MinusBlock;
-            case "MulBlock":
-                return MulBlock;
-            case "DivBlock":
-                return DivBlock;
-            case "ModBlock":
-                return ModBlock;
-            case "NegativeBlock":
-                return NegativeBlock;
-            case "AndBlock":
-                return AndBlock;
-            case "OrBlock":
-                return OrBlock;
-            case "NotBlock":
-                return NotBlock;
-            case "BracketOpenBlock":
-                return BracketOpenBlock;
-            case "BracketCloseBlock":
-                return BracketCloseBlock;
-            case "AssignmentBlock":
-                return AssignmentBlock;
-            case "CommaBlock":
-                return CommaBlock;
-            case "Number1":
-                return Number1;
-            case "Number2":
-                return Number2;
-            case "Number3":
-                return Number3;
-            case "Number4":
-                return Number4;
-            case "Number5":
-                return Number5;
-            case "Number6":
-                return Number6;
-            case "Number7":
-                return Number7;
-            case "Number8":
-                return Number8;
-            case "Number9":
-                return Number9;
-            case "Number0":
-                return Number0;
-            case "BoolTrueBlock":
-                return BoolTrueBlock;
-            case "BoolFalseBlock":
-                return BoolFalseBlock;
-            case "IntVarABlock":
-                return IntVarABlock;
-            case "IntVarBBlock":
-                return IntVarBBlock;
-            case "IntVarCBlock":
-                return IntVarCBlock;
-            case "IntVarIBlock":
-                return IntVarIBlock;
-            case "IntVarJBlock":
-                return IntVarJBlock;
-            case "IntVarKBlock":
-                return IntVarKBlock;
-            case "BoolVarWBlock":
-                return BoolVarWBlock;
-            case "BoolVarXBlock":
-                return BoolVarXBlock;
-            case "BoolVarYBlock":
-                return BoolVarYBlock;
-            case "BoolVarZBlock":
-                return BoolVarZBlock;
-            case "FuncMeleeAttackBlock":
-                return FuncMeleeAttackBlock;
-            case "FuncRangeAttackBlock":
-                return FuncRangeAttackBlock;
-            case "FuncObserveBlock":
-                return FuncObserveBlock;
-            case "FuncDefenceBlock":
-                return FuncDefenceBlock;
-            case "FuncEnergyChargeBlock":
-                return FuncEnergyChargeBlock;
-            case "FuncBreakShieldBlock":
-                return FuncBreakShieldBlock;
-            case "FuncRepairBlock":
-                return FuncRepairBlock;
+            case "StartHere":
+                return StartHere;
+            case "Reserved_For":
+                return Reserved_For;
+            case "Reserved_If":
+                return Reserved_If;
+            case "Reserved_ElseIf":
+                return Reserved_ElseIf;
+            case "Reserved_Else":
+                return Reserved_Else;
+            case "Operator_Equal":
+                return Operator_Equal;
+            case "Operator_NotEqual":
+                return Operator_NotEqual;
+            case "Operator_GT":
+                return Operator_GT;
+            case "Operator_LT":
+                return Operator_LT;
+            case "Operator_GE":
+                return Operator_GE;
+            case "Operator_LE":
+                return Operator_LE;
+            case "Operator_Plus":
+                return Operator_Plus;
+            case "Operator_Minus":
+                return Operator_Minus;
+            case "Operator_Mul":
+                return Operator_Mul;
+            case "Operator_Div":
+                return Operator_Div;
+            case "Operator_Mod":
+                return Operator_Mod;
+            case "Operator_Neg":
+                return Operator_Neg;
+            case "Operator_And":
+                return Operator_And;
+            case "Operator_Or":
+                return Operator_Or;
+            case "Operator_Not":
+                return Operator_Not;
+            case "Operator_Bop":
+                return Operator_Bop;
+            case "Operator_Bcl":
+                return Operator_Bcl;
+            case "Operator_Ass":
+                return Operator_Ass;
+            case "Operator_Comma":
+                return Operator_Comma;
+            case "Const_1":
+                return Const_1;
+            case "Const_2":
+                return Const_2;
+            case "Const_3":
+                return Const_3;
+            case "Const_4":
+                return Const_4;
+            case "Const_5":
+                return Const_5;
+            case "Const_6":
+                return Const_6;
+            case "Const_7":
+                return Const_7;
+            case "Const_8":
+                return Const_8;
+            case "Const_9":
+                return Const_9;
+            case "Const_0":
+                return Const_0;
+            case "Bool_True":
+                return Bool_True;
+            case "Bool_False":
+                return Bool_False;
+            case "Var_a":
+                return Var_a;
+            case "Var_b":
+                return Var_b;
+            case "Var_c":
+                return Var_c;
+            case "Var_i":
+                return Var_i;
+            case "Var_j":
+                return Var_j;
+            case "Var_k":
+                return Var_k;
+            case "Var_w":
+                return Var_w;
+            case "Var_x":
+                return Var_x;
+            case "Var_y":
+                return Var_y;
+            case "Var_z":
+                return Var_z;
+            case "Func_AttackMelee":
+                return Func_AttackMelee;
+            case "Func_AttackRange":
+                return Func_AttackRange;
+            case "Func_Observe":
+                return Func_Observe;
+            case "Func_Defence":
+                return Func_Defence;
+            case "Func_EnergyCharge":
+                return Func_EnergyCharge;
+            case "Func_BreakShield":
+                return Func_BreakShield;
+            case "Func_Repair":
+                return Func_Repair;
         }
         return null;
     }
@@ -225,7 +230,7 @@ public class ButtonClick : MonoBehaviour
         NewBlock.transform.name += (count++);
         NewBlock.transform.parent = GameObject.Find("WorkSpace").transform;
         NewBlock.transform.localPosition = Vector3.zero;
-        NewBlock.transform.localRotation = Quaternion.Euler(new Vector3(0, 180, 0));
+        //NewBlock.transform.localRotation = Quaternion.Euler(new Vector3(0, 180, 0));
     }
 
     /*
