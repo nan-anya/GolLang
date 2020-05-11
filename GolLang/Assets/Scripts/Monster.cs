@@ -14,6 +14,7 @@ public class Monster : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        this.transform.LookAt(GameObject.Find("Golem").transform);
     }
 
     // Update is called once per frame
