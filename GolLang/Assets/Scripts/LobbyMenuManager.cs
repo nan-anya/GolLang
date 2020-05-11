@@ -5,7 +5,11 @@ using UnityEngine;
 public class LobbyMenuManager : MonoBehaviour
 {
     public static GameManager instance;
+
     GameState gameState;
+
+    public GameObject Golem;
+    public GameObject Player;
 
     public enum GameState
     {
@@ -21,7 +25,7 @@ public class LobbyMenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SetGameState(GameState.StartMenu);
+        //SetGameState(GameState.StartMenu);
     }
 
     // Update is called once per frame
@@ -41,15 +45,19 @@ public class LobbyMenuManager : MonoBehaviour
         GameObject.Find("[CameraRig]").transform.Find("Camera").transform.Find("StartCanvasUI").localPosition = new Vector3(0, -0.5f, 2.5f);
         GameObject.Find("[CameraRig]").transform.Find("Camera").transform.Find("StartCanvasUI").localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
 
-        SetGameState(GameState.InGame);
+        //SetGameState(GameState.InGame);
     }
 
     public void TeleportPlayer()
     {
-        //Transform cameraRigTransform = GameObject.Find("[CameraRig]").transform;
-        //Transform golem = GameObject.Find("Golem").transform;
+        Vector3 dir = Golem.transform.forward * -1;
+        Vector3 pos = Golem.transform.position + dir * 3;
 
-        //cameraRigTransform.position = new Vector3(golem.position.x, golem.position.y - 1f, golem.position.z + 1.25f);
+        Player.transform.position = pos;
+        Player.transform.LookAt(Golem.transform);
+
+        DisableLeftController();
+        MagicCircleRender();
     }
 
 

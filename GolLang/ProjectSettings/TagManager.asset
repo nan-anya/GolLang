@@ -5,11 +5,18 @@ TagManager:
   serializedVersion: 2
   tags:
   - FxTemporaire
+<<<<<<< HEAD
   - RightTrigger
   - ChildTrigger
   - SiblingTrigger
   - Block
   - Grabed
+=======
+  - RightCollider
+  - DownCollider
+  - ChildCollider
+  - SiblingCollider
+>>>>>>> b853c034b748469a3556853efa0abb90b9dddaf8
   layers:
   - Default
   - TransparentFX
