@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class CTrigger : MonoBehaviour
 {
-    public bool attachable = true;
+    public Block childBlock = null;
 
-    public bool detachable = false;
-
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag.Contains("Block") && attachable)
+        if (other.gameObject.tag.Contains("Block") && childBlock == null)
         {
-            transform.parent.GetComponent<Block>().childTrigger(other.gameObject);
+            transform.parent.GetComponent<Block>().childTriggerIn(other.gameObject);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-
+        if (childBlock != null && childBlock == other.gameObject.GetComponent<Block>())
+        {
+            transform.parent.GetComponent<Block>().childTriggerOut();
+        }
     }
 }

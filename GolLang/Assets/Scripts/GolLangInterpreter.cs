@@ -4,172 +4,123 @@ using System.Collections.Generic;
 using System.Data;
 using System.Runtime.Remoting.Messaging;
 using UnityEngine;
+using UnityEngine.UI;
 using Valve.VR.InteractionSystem;
 
 public class GolLangInterpreter : MonoBehaviour
 {
+    //트리
     public GolLangTree gTree;
 
+    //함수들과 변수들 
     public List<GolLangFunctionDescription> functions;
 
     private List<GolLangVarData> variables;
 
+    // 상호작용해야 하는 게임 오브젝트들
+    public Monster monster;
+
+    public Golem golem;
+
+    Text consoleString;
+
+    //작동변수
+    private bool killInterpreter;
+
+    private int interpreterErrorCode;
+
+    private CalcResult tempCR;
+
     void Start()
     {
+        gTree = new GolLangTree();
+
         functions = new List<GolLangFunctionDescription>();
         variables = new List<GolLangVarData>();
 
-        test();
+        consoleString = transform.Find("Console").Find("Text").GetComponent<Text>();
+
+        interpreterErrorCode = 0;
     }
 
-    void test()
+
+    /*
+    에러코드 반환
+    0 : 정상 종료
+    1 : 골램 사망
+    2 : 적 사망
+    3 : 올바르지 않은 문법
+    */
+
+
+
+    public IEnumerator interpret()
     {
-        functions.Add(new GolLangFunctionDescription("F1", new List<ValueType>(new ValueType[] { ValueType.VARI, ValueType.VARI }), ValueType.VARI));
-        functions.Add(new GolLangFunctionDescription("F2", new List<ValueType>(new ValueType[] { ValueType.VARI, ValueType.VARI }), ValueType.VARI));
-        functions.Add(new GolLangFunctionDescription("F3", new List<ValueType>(new ValueType[] { ValueType.VARI, ValueType.VARI }), ValueType.VARI));
-        functions.Add(new GolLangFunctionDescription("F4", new List<ValueType>(new ValueType[] { ValueType.VARI }), ValueType.VARI));
+        monster.reset();
+        golem.reset();
 
-        gTree = new GolLangTree();
+        consoleString.text = "";
 
-        List<GolLangKeyword> tempGLK = new List<GolLangKeyword>();
+        interpreterErrorCode = 0;
 
-        tempGLK.Add(new GolLangKeyword(GKeyword.STARTHERE));
+        variables.Clear();
 
-        gTree.head = new GolLangNode(new GolLangLine(tempGLK));
-
-        tempGLK.Clear();
-        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "i"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.ASS));
-        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "0"));
-
-        gTree.head.addChild(new GolLangNode(new GolLangLine(tempGLK)));
-
-        tempGLK.Clear();
-
-        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "k"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.ASS));
-        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "0"));
-
-        gTree.head.addChild(new GolLangNode(new GolLangLine(tempGLK)));
-
-        tempGLK.Clear();
-
-        tempGLK.Add(new GolLangKeyword(GKeyword.FOR));
-        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "i"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.NEQ));
-        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "3"));
-
-        gTree.head.addChild(new GolLangNode(new GolLangLine(tempGLK)));
-
-        tempGLK.Clear();
-
-        tempGLK.Add(new GolLangKeyword(GKeyword.IF));
-        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "i"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.MOD));
-        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "2"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.EQ));
-        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "1"));
-
-        gTree.head.children[2].addChild(new GolLangNode(new GolLangLine(tempGLK)));
-
-        tempGLK.Clear();
-
-        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "k"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.ASS));
-        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "k"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.PLUS));
-        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "1"));
-
-        gTree.head.children[2].children[0].addChild(new GolLangNode(new GolLangLine(tempGLK)));
-
-        tempGLK.Clear();
-
-        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "i"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.ASS));
-        tempGLK.Add(new GolLangKeyword(GKeyword.VARI, "i"));
-        tempGLK.Add(new GolLangKeyword(GKeyword.PLUS));
-        tempGLK.Add(new GolLangKeyword(GKeyword.CONSTI, "1"));
-
-        gTree.head.children[2].addChild(new GolLangNode(new GolLangLine(tempGLK)));
-
-        tempGLK.Clear();
-
-        interpret();
-
-        foreach (GolLangVarData i in variables)
-        {
-            print(i);
-        }
-        
-    }
-
-    void test2()
-    {
-        List<GolLangKeyword> gl = new List<GolLangKeyword>();
-
-        gl.Add(new GolLangKeyword(GKeyword.VARI, "i"));
-        gl.Add(new GolLangKeyword(GKeyword.ASS));
-        gl.Add(new GolLangKeyword(GKeyword.BOP));
-        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "1"));
-        gl.Add(new GolLangKeyword(GKeyword.PLUS));
-        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "2"));
-        gl.Add(new GolLangKeyword(GKeyword.BCL));
-        gl.Add(new GolLangKeyword(GKeyword.MUL));
-        gl.Add(new GolLangKeyword(GKeyword.CONSTI, "3"));
-
-        GolLangNode gn = new GolLangNode(new GolLangLine(gl));
-
-        excuteLine(gn);
-
-    }
-
-    public void preorderTraversal()
-    {
-        GolLangNode now = gTree.head;
-
-        while (true)
-        {
-            if (!now.isVisited)
-            {
-                now.isVisited = true;      
-            }
-
-            GolLangNode temp = now.getFirstUnvisitedChild();
-
-            if (temp != null)
-            {
-                now = temp;
-            }
-
-            else if (now.hasRightSibling())
-            {
-                now = now.rightSibling;
-            }
-            else if (now.parents != null)
-            {
-                now = now.parents;
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-
-    public void interpret()
-    {
         foreach (GolLangNode i in gTree)
         {
             if (lineCheck(i.line) == lineKind.EXE)
             {
-                excuteLine(i);
+                yield return StartCoroutine(excuteLine(i));
+
+                //TODO 에러처리
+                if (tempCR.errorCode == 1)
+                {
+                    //문법오류
+
+                    consoleString.text += "올바르지 않은 문법입니다.\n";
+                    
+                    interpreterErrorCode = 3;
+                    yield break;
+                }
+                else if (tempCR.errorCode == 2)
+                {
+                    consoleString.text += "올바르지 않은 문법입니다.\n";
+                    interpreterErrorCode = 3;
+                    yield break;
+                }
+                else if (tempCR.errorCode == 3)
+                {
+                    consoleString.text += "올바르지 않은 문법입니다.\n";
+                    interpreterErrorCode = 3;
+                    yield break;
+                }
+                else if (tempCR.errorCode == 4)
+                {
+                    consoleString.text += "올바르지 않은 문법입니다.\n";
+                    interpreterErrorCode = 3;
+                    yield break;
+                }
+                // 골램 사망
+                else if (tempCR.errorCode == 5)
+                {
+                    consoleString.text += "골램이 죽었습니다.\n";
+                    interpreterErrorCode = 1;
+                    yield break;
+                }
+                // 적 사망
+                else if (tempCR.errorCode == 6)
+                {
+                    consoleString.text += "적이 죽었습니다.\n";
+                    interpreterErrorCode = 2;
+                    yield break;
+                }
+
             }
             //TODO break있어야함?
             else if (lineCheck(i.line) == lineKind.FOR)
             {
                 GolLangNode tempGN = new GolLangNode(new GolLangLine(i.line.keywords.GetRange(1, i.line.keywords.Count - 1)));
 
-                CalcResult tempCR = excuteLine(tempGN);
+                yield return StartCoroutine(excuteLine(tempGN));
 
                 if (tempCR.errorCode == 0)
                 {
@@ -187,19 +138,28 @@ public class GolLangInterpreter : MonoBehaviour
                     //TODO 에러처리
                     if (tempCR.errorCode == 1)
                     {
-
+                        //문법오류
+                        consoleString.text += "올바르지 않은 문법입니다.\n";
+                        interpreterErrorCode = 3;
+                        yield break;
                     }
                     else if (tempCR.errorCode == 2)
                     {
-
+                        consoleString.text += "올바르지 않은 문법입니다.\n";
+                        interpreterErrorCode = 3;
+                        yield break;
                     }
                     else if (tempCR.errorCode == 3)
                     {
-
+                        consoleString.text += "올바르지 않은 문법입니다.\n";
+                        interpreterErrorCode = 3;
+                        yield break;
                     }
                     else if (tempCR.errorCode == 4)
                     {
-
+                        consoleString.text += "올바르지 않은 문법입니다.\n";
+                        interpreterErrorCode = 3;
+                        yield break;
                     }
                 }
             }
@@ -240,7 +200,7 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         GolLangNode tempGN = new GolLangNode(new GolLangLine(k.line.keywords.GetRange(1, k.line.keywords.Count - 1)));
 
-                        CalcResult tempCR = excuteLine(tempGN);
+                        yield return StartCoroutine(excuteLine(tempGN));
 
                         if (tempCR.errorCode == 0)
                         {
@@ -266,19 +226,27 @@ public class GolLangInterpreter : MonoBehaviour
                             //TODO 에러처리
                             if (tempCR.errorCode == 1)
                             {
-
+                                consoleString.text += "올바르지 않은 문법입니다.\n";
+                                interpreterErrorCode = 3;
+                                yield break;
                             }
                             else if (tempCR.errorCode == 2)
                             {
-
+                                consoleString.text += "올바르지 않은 문법입니다.\n";
+                                interpreterErrorCode = 3;
+                                yield break;
                             }
                             else if (tempCR.errorCode == 3)
                             {
-
+                                consoleString.text += "올바르지 않은 문법입니다.\n";
+                                interpreterErrorCode = 3;
+                                yield break;
                             }
                             else if (tempCR.errorCode == 4)
                             {
-
+                                consoleString.text += "올바르지 않은 문법입니다.\n";
+                                interpreterErrorCode = 3;
+                                yield break;
                             }
                         }
                     }
@@ -289,10 +257,20 @@ public class GolLangInterpreter : MonoBehaviour
                 }
             }
             else if (lineCheck(i.line) == lineKind.STARTHERE)
-            { 
+            {
                 //Do nothing
             }
         }
+
+        foreach (GolLangVarData i in variables)
+        {
+            consoleString.text += i;
+            consoleString.text += "\n";
+
+        }
+        consoleString.text += "정상적으로 실행 되었습니다.\n";
+        interpreterErrorCode = 0;
+        yield break;
     }
 
     //문법이 맞는 줄이 들어오는 것을 전제로 한다.
@@ -322,9 +300,9 @@ public class GolLangInterpreter : MonoBehaviour
         return lineKind.EXE;
     }
 
-    private enum lineKind {STARTHERE, FOR, IF, ELSE, ELIF, EXE, UNKNOWN}
+    private enum lineKind { STARTHERE, FOR, IF, ELSE, ELIF, EXE, UNKNOWN }
 
-    private CalcResult excuteLine(GolLangNode node)
+    private IEnumerator excuteLine(GolLangNode node)
     {
         Stack<GolLangParseNode> calculateStack = new Stack<GolLangParseNode>();
 
@@ -355,30 +333,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
                         if (operand2.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand2.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand2.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -392,7 +382,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.MINUS)
@@ -406,30 +398,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -443,7 +447,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.MUL)
@@ -457,30 +463,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -494,7 +512,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.DIV)
@@ -508,30 +528,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -545,7 +577,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.MOD)
@@ -559,30 +593,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -596,7 +642,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.NEG)
@@ -608,15 +656,21 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -629,7 +683,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 //Int, Bool 비교연산
@@ -644,30 +700,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -691,7 +759,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.NEQ)
@@ -705,30 +775,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -752,7 +834,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 //Int only
@@ -767,30 +851,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -813,7 +909,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.LT)
@@ -827,30 +925,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -873,7 +983,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.GE)
@@ -887,30 +999,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -933,7 +1057,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.LE)
@@ -947,30 +1073,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -993,7 +1131,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 //Bool only
@@ -1008,30 +1148,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -1054,7 +1206,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.OR)
@@ -1068,30 +1222,42 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -1114,7 +1280,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 else if (i.line.keywords[0].keyword == GKeyword.NOT)
@@ -1126,15 +1294,21 @@ public class GolLangInterpreter : MonoBehaviour
                     {
                         if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -1156,7 +1330,9 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
                 //할당
@@ -1169,6 +1345,7 @@ public class GolLangInterpreter : MonoBehaviour
                     //에러 코드 일 때
                     if (operand1.type == dataType.ERROR)
                     {
+                        //선언되지 않은 변수면 선언 함
                         if (operand1.value == 1)
                         {
                             if (operand2.type == dataType.CONSTI || operand2.type == dataType.VARI)
@@ -1186,26 +1363,36 @@ public class GolLangInterpreter : MonoBehaviour
                         }
                         else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
                         else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
                     if (operand2.type == dataType.ERROR)
                     {
-                        if (operand2.value == 1)
+                        if (operand1.value == 1)
                         {
-                            return new CalcResult(1, 0);
+                            tempCR = new CalcResult(1, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 2)
+                        else if (operand1.value == 2)
                         {
-                            return new CalcResult(2, 0);
+                            tempCR = new CalcResult(2, 0);
+
+                            yield break;
                         }
-                        else if (operand2.value == 3)
+                        else if (operand1.value == 3)
                         {
-                            return new CalcResult(3, 0);
+                            tempCR = new CalcResult(3, 0);
+
+                            yield break;
                         }
                     }
 
@@ -1217,33 +1404,196 @@ public class GolLangInterpreter : MonoBehaviour
                     }
                     else
                     {
-                        return new CalcResult(2, 0);
+                        tempCR = new CalcResult(2, 0);
+
+                        yield break;
                     }
                 }
 
                 else if (i.line.keywords[0].keyword == GKeyword.FUNC)
                 {
-                    //TODO
+                    if (i.line.keywords[0].nameOrValue.Equals("MeleeAttack"))
+                    {
+                        yield return StartCoroutine(golem.attack_Coroutine());
+
+                        int nextAction = monster.getNextAction();
+
+                        //상대가 에너지 충전
+                        if (nextAction == 0)
+                        {
+                            yield return StartCoroutine(monster.hit_Coroutine());
+
+                            monster.getAP();
+
+                            monster.getDamage(golem.AP);
+                            golem.AP = 0;
+                        }
+                        //상대가 공격
+                        else if (nextAction == 1)
+                        {
+                            yield return StartCoroutine(monster.attack_Coroutine());
+
+                            monster.getDamage(golem.AP);
+                            golem.AP = 0;
+
+                            golem.getDamage(monster.AP);
+                            monster.AP = 0;
+                        }
+                        //상대가 방어
+                        else if (nextAction == 2)
+                        {
+                            yield return StartCoroutine(monster.defence_Coroutine());
+
+                            golem.AP = 0;
+                        }
+                        //알수 없는 행동 error
+                        else
+                        {
+
+                        }
+
+                        monster.moveNext();
+
+                        if (monster.HP <= 0)
+                        {
+                            yield return StartCoroutine(monster.die_Coroutine());
+
+                            tempCR = new CalcResult(6, 0);
+
+                            yield break;
+                        }
+                        else if (golem.HP <= 0)
+                        {
+                            yield return StartCoroutine(golem.die_Coroutine());
+
+                            tempCR = new CalcResult(5, 0);
+
+                            yield break;
+                        }
+                    }
+                    else if (i.line.keywords[0].nameOrValue.Equals("Observe"))
+                    {
+                        /*
+                        상대가 다음에 할 행동을 반환
+                        0 : 에너지 충전
+                        1 : 근거리 공격
+                        2 : 방어
+                        */
+
+                        GolLangParseNode tempN = new GolLangParseNode(new GolLangLine(new List<GolLangKeyword>(new GolLangKeyword[] { new GolLangKeyword(GKeyword.CONSTI, (monster.getNextAction()).ToString()) })));
+
+                        calculateStack.Push(tempN);
+                    }
+                    else if (i.line.keywords[0].nameOrValue.Equals("Defence"))
+                    {
+                        yield return StartCoroutine(golem.defence_Coroutine());
+
+                        int nextAction = monster.getNextAction();
+
+                        //상대가 에너지 충전
+                        if (nextAction == 0)
+                        {
+                            monster.getAP();
+                        }
+                        //상대가 공격
+                        else if (nextAction == 1)
+                        {
+                            yield return StartCoroutine(monster.attack_Coroutine());
+                        }
+                        //상대가 방어
+                        else if (nextAction == 2)
+                        {
+                            yield return StartCoroutine(monster.defence_Coroutine());
+                        }
+                        //알수 없는 행동 error
+                        else
+                        {
+
+                        }
+
+                        monster.moveNext();
+                    }
+                    else if (i.line.keywords[0].nameOrValue.Equals("EnergyCharge"))
+                    {
+                        int nextAction = monster.getNextAction();
+
+                        golem.getAP();
+
+                        //상대가 에너지 충전
+                        if (nextAction == 0)
+                        {
+                            monster.getAP();
+                        }
+                        //상대가 공격
+                        else if (nextAction == 1)
+                        {
+                            yield return StartCoroutine(monster.attack_Coroutine());
+                            golem.getDamage(monster.AP);
+                            monster.AP = 0;
+
+                            yield return StartCoroutine(golem.hit_Coroutine());
+
+
+                        }
+                        //상대가 방어
+                        else if (nextAction == 2)
+                        {
+                            yield return StartCoroutine(monster.defence_Coroutine());
+                        }
+                        //알수 없는 행동 error
+                        else
+                        {
+
+                        }
+
+                        monster.moveNext();
+
+                        if (golem.HP <= 0)
+                        {
+                            yield return StartCoroutine(golem.die_Coroutine());
+
+                            tempCR = new CalcResult(5, 0);
+
+                            yield break;
+                        }
+                    }
+                    else if (i.line.keywords[0].nameOrValue.Equals("GolemEnergy"))
+                    {
+                        GolLangParseNode tempN = new GolLangParseNode(new GolLangLine(new List<GolLangKeyword>(new GolLangKeyword[] { new GolLangKeyword(GKeyword.CONSTI, golem.AP.ToString()) })));
+
+                        calculateStack.Push(tempN);
+                    }
+                    else// 알 수 없는 함수
+                    {
+
+                    }
                 }
             }
         }
 
         if (calculateStack.Count != 0)
         {
-            return new CalcResult(0, int.Parse(calculateStack.Peek().line.keywords[0].nameOrValue));
+            tempCR = new CalcResult(0, int.Parse(calculateStack.Peek().line.keywords[0].nameOrValue));
+
+            yield break;
         }
         else
         {
-            return new CalcResult(0, 0);
+            tempCR = new CalcResult(0, 0);
+
+            yield break;
         }
     }
-    
+
     //int로 에러코드 반환
     //0 정상
     //1 선언되지 않은 변수
     //2 피연산자 타입오류
     //3 피연산자가 아님
     //4 알려지지 않은 연산자
+    // 특수 에러코드
+    //5 골램 사망
+    //6 적 사망
     private class CalcResult
     {
         public int errorCode;
@@ -1279,9 +1629,8 @@ public class GolLangInterpreter : MonoBehaviour
             foreach (GolLangKeyword i in node.line.keywords)
             {
                 temp += i.nameOrValue;
-
-                return new DataState(int.Parse(temp), dataType.CONSTI);
             }
+            return new DataState(int.Parse(temp), dataType.CONSTI);
         }
         else if (node.line.keywords[0].keyword == GKeyword.CONSTB)
         {
@@ -1296,12 +1645,13 @@ public class GolLangInterpreter : MonoBehaviour
         }
         else if (node.line.keywords[0].keyword == GKeyword.VARI)
         {
-
             GolLangVarData tempVar = variables.Find(x => x.name.Contains(node.line.keywords[0].nameOrValue));
 
             if (tempVar == null)
             {
-                return new DataState(1, dataType.ERROR);
+                variables.Add(new GolLangVarData(node.line.keywords[0].nameOrValue, 0, ValueType.VARI));
+                return new DataState(0, dataType.VARI);
+                //return new DataState(1, dataType.ERROR);
             }
             else if (tempVar.type != ValueType.VARI)
             {
@@ -1316,7 +1666,9 @@ public class GolLangInterpreter : MonoBehaviour
 
             if (tempVar == null)
             {
-                return new DataState(1, dataType.ERROR);
+                variables.Add(new GolLangVarData(node.line.keywords[0].nameOrValue, 0, ValueType.VARB));
+                return new DataState(1, dataType.VARB);
+                //return new DataState(1, dataType.ERROR);
             }
             else if (tempVar.type != ValueType.VARB)
             {
@@ -1349,7 +1701,7 @@ public class GolLangInterpreter : MonoBehaviour
         {
             this.value = value;
             this.type = type;
-        }        
+        }
     }
     public enum dataType { VARI, VARB, CONSTI, CONSTB, ARRI, ARRB, ERROR }
 
@@ -1555,7 +1907,7 @@ public class GolLangInterpreter : MonoBehaviour
 
             int bracketCount = 0;
 
-            for (int i = 2; i < node.line.keywords.Count-1; i++)
+            for (int i = 2; i < node.line.keywords.Count - 1; i++)
             {
                 //함수의 파라미터들을 콤마 단위로 끊음, 단 괄호의 안일경우 끊지 않음
                 if (node.line.keywords[i].keyword == GKeyword.COMMA)
@@ -1584,14 +1936,17 @@ public class GolLangInterpreter : MonoBehaviour
                     keywords.Add(node.line.keywords[i]);
                 }
             }
-
-            tempL.Add(new GolLangParseNode(new GolLangLine(keywords)));
-
-            node.line.keywords = new List<GolLangKeyword>(new GolLangKeyword[]{node.line.keywords[0]});
-
-            foreach (GolLangParseNode i in tempL)
+            // 자식(파라미터)가 있는 경우에만 자식 노드를 만듦
+            if (tempL.Count != 0)
             {
-                node.addChild(i);
+                tempL.Add(new GolLangParseNode(new GolLangLine(keywords)));
+
+                node.line.keywords = new List<GolLangKeyword>(new GolLangKeyword[] { node.line.keywords[0] });
+
+                foreach (GolLangParseNode i in tempL)
+                {
+                    node.addChild(i);
+                }
             }
         }
         //연산자 피연산자

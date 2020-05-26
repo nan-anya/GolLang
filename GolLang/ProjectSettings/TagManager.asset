@@ -13,6 +13,7 @@ TagManager:
   - projectile
   - ChildTrigger
   - SineBullet
+  - Grabed
   layers:
   - Default
   - TransparentFX

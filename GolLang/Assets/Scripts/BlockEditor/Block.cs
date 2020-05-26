@@ -1,29 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Block : MonoBehaviour
 {
     public GolLangKeyword keyword;
 
-    // For, If, ElseIF는 자식을 가질 수 있다
-    bool canHaveChild;
-    // 변수, 함수, 예약어 등은 형제를 가질수 있다. 즉 문장의 처음에 올 수 있다.
-    // StartHere, 상수, 연산자 등은 문장의 처음에 올 수 없다.
-    bool canHaveSibling;
-    // Else, StartHere은 한 문장안에서 자신을 제외한 다른 키워드 들과 같이 있을 수 없다.
-    bool canHaveRight;
-    
-    BlockLocation blockLoc;
-
     public BlockKind blockKind;
 
     public EditorNode node = null;
-    
 
+    public bool haveChild = false;
+    public bool haveSibling = false;
+    public bool haveRight = false;
 
-    //라인의 어디에 위치 하는가
-    public enum BlockLocation {HEAD, MIDDLE, END, NULL}
+    public bool inMiddle = false;
 
     // GKeyword와 유사하나 모든 블록에 대한 코드를 가짐  
     public enum BlockKind 
@@ -57,7 +49,7 @@ public class Block : MonoBehaviour
         //Bool Variable
         VARB_w, VARB_x, VARB_y, VARB_z,
         //Function
-        FUNC_MELEEATTACK, FUNC_RANGEATTACK, FUNC_OBSERVE, FUNC_DEFENCE, FUNC_ENERGYCHARGE, FUNC_BREAKSHIELD, FUNC_REPAIR
+        FUNC_MELEEATTACK, FUNC_RANGEATTACK, FUNC_OBSERVE, FUNC_DEFENCE, FUNC_ENERGYCHARGE, FUNC_BREAKSHIELD, FUNC_REPAIR, FUNC_GOLEMENERGY
     }
 
     public void Start()
@@ -72,2716 +64,938 @@ public class Block : MonoBehaviour
             //META
             case BlockKind.STARTHERE:
                 keyword = new GolLangKeyword(GKeyword.STARTHERE);
-                canHaveChild = true;
-                canHaveSibling = false;
-                canHaveRight = false;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Control
             case BlockKind.FOR:
                 keyword = new GolLangKeyword(GKeyword.FOR);
-                canHaveChild = true;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.IF:
                 keyword = new GolLangKeyword(GKeyword.IF);
-                canHaveChild = true;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.ELIF:
                 keyword = new GolLangKeyword(GKeyword.ELIF);
-                canHaveChild = true;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.ELSE:
-                keyword = new GolLangKeyword(GKeyword.ELSE);
-                canHaveChild = true;
-                canHaveSibling = true;
-                canHaveRight = false;
-                blockLoc = BlockLocation.NULL;
+                keyword = new GolLangKeyword(GKeyword.ELSE);       
                 this.blockKind = blockKind;
                 break;
 
             //Int and Bool Compare
             case BlockKind.EQ:
                 keyword = new GolLangKeyword(GKeyword.EQ);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.NEQ:
                 keyword = new GolLangKeyword(GKeyword.NEQ);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Int only Compare
             case BlockKind.GT:
                 keyword = new GolLangKeyword(GKeyword.GT);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
+
             case BlockKind.LT:
                 keyword = new GolLangKeyword(GKeyword.LT);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.GE:
                 keyword = new GolLangKeyword(GKeyword.GE);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.LE:
                 keyword = new GolLangKeyword(GKeyword.LE);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
            
             //Calculate
             case BlockKind.PLUS:
                 keyword = new GolLangKeyword(GKeyword.PLUS);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
+
             case BlockKind.MINUS:
                 keyword = new GolLangKeyword(GKeyword.MINUS);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
+
             case BlockKind.MUL:
                 keyword = new GolLangKeyword(GKeyword.MUL);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
+
             case BlockKind.DIV:
                 keyword = new GolLangKeyword(GKeyword.DIV);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
+
             case BlockKind.MOD:
                 keyword = new GolLangKeyword(GKeyword.MOD);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Negative Num
             case BlockKind.NEG:
                 keyword = new GolLangKeyword(GKeyword.NEG);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Logical
             case BlockKind.AND:
                 keyword = new GolLangKeyword(GKeyword.AND);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.OR:
                 keyword = new GolLangKeyword(GKeyword.OR);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.NOT:
                 keyword = new GolLangKeyword(GKeyword.NOT);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Bracket
             case BlockKind.BOP:
                 keyword = new GolLangKeyword(GKeyword.BOP);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.BCL:
                 keyword = new GolLangKeyword(GKeyword.BCL);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Assignment
             case BlockKind.ASS:
                 keyword = new GolLangKeyword(GKeyword.ASS);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
+
             //ETC
             case BlockKind.COMMA:
                 keyword = new GolLangKeyword(GKeyword.COMMA);
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Const Int
             case BlockKind.CONSTI_0:
                 keyword = new GolLangKeyword(GKeyword.CONSTI, "0");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.CONSTI_1:
                 keyword = new GolLangKeyword(GKeyword.CONSTI, "1");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.CONSTI_2:
                 keyword = new GolLangKeyword(GKeyword.CONSTI, "2");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.CONSTI_3:
                 keyword = new GolLangKeyword(GKeyword.CONSTI, "3");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.CONSTI_4:
                 keyword = new GolLangKeyword(GKeyword.CONSTI, "4");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.CONSTI_5:
                 keyword = new GolLangKeyword(GKeyword.CONSTI, "5");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.CONSTI_6:
                 keyword = new GolLangKeyword(GKeyword.CONSTI, "6");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.CONSTI_7:
                 keyword = new GolLangKeyword(GKeyword.CONSTI, "7");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.CONSTI_8:
                 keyword = new GolLangKeyword(GKeyword.CONSTI, "8");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.CONSTI_9:
                 keyword = new GolLangKeyword(GKeyword.CONSTI, "9");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Const Bool
             case BlockKind.CONSTB_TRUE:
                 keyword = new GolLangKeyword(GKeyword.CONSTB, "1");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.CONSTB_FALSE:
                 keyword = new GolLangKeyword(GKeyword.CONSTB, "0");
-                canHaveChild = false;
-                canHaveSibling = false;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Int Variable
             case BlockKind.VARI_a:
                 keyword = new GolLangKeyword(GKeyword.VARI, "a");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.VARI_b:
                 keyword = new GolLangKeyword(GKeyword.VARI, "b");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.VARI_c:
                 keyword = new GolLangKeyword(GKeyword.VARI, "c");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.VARI_i:
                 keyword = new GolLangKeyword(GKeyword.VARI, "i");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.VARI_j:
                 keyword = new GolLangKeyword(GKeyword.VARI, "j");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.VARI_k:
                 keyword = new GolLangKeyword(GKeyword.VARI, "k");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Bool Variable
             case BlockKind.VARB_w:
                 keyword = new GolLangKeyword(GKeyword.VARB, "w");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.VARB_x:
                 keyword = new GolLangKeyword(GKeyword.VARB, "x");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.VARB_y:
                 keyword = new GolLangKeyword(GKeyword.VARB, "y");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.VARB_z:
                 keyword = new GolLangKeyword(GKeyword.VARB, "z");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             //Function
             case BlockKind.FUNC_MELEEATTACK:
                 keyword = new GolLangKeyword(GKeyword.FUNC, "MeleeAttack");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.FUNC_RANGEATTACK:
                 keyword = new GolLangKeyword(GKeyword.FUNC, "RangeAttack");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.FUNC_OBSERVE:
                 keyword = new GolLangKeyword(GKeyword.FUNC, "Observe");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.FUNC_DEFENCE:
                 keyword = new GolLangKeyword(GKeyword.FUNC, "Defence");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.FUNC_ENERGYCHARGE:
                 keyword = new GolLangKeyword(GKeyword.FUNC, "EnergyCharge");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.FUNC_BREAKSHIELD:
                 keyword = new GolLangKeyword(GKeyword.FUNC, "BreakShield");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
                 this.blockKind = blockKind;
                 break;
 
             case BlockKind.FUNC_REPAIR:
                 keyword = new GolLangKeyword(GKeyword.FUNC, "Repair");
-                canHaveChild = false;
-                canHaveSibling = true;
-                canHaveRight = true;
-                blockLoc = BlockLocation.NULL;
+                this.blockKind = blockKind;
+                break;
+
+            case BlockKind.FUNC_GOLEMENERGY:
+                keyword = new GolLangKeyword(GKeyword.FUNC, "GolemEnergy");
                 this.blockKind = blockKind;
                 break;
         }
     }
 
-    public void rightTrigger(GameObject right)
+    public void rightTriggerIn(GameObject right)
     {
+        if(right.transform.Find("ChildTrigger") != null)
+        {
+            right.transform.Find("ChildTrigger").gameObject.SetActive(true);
+        }
+        if (right.transform.Find("RightTrigger") != null)
+        {
+            right.transform.Find("RightTrigger").gameObject.SetActive(true);
+        }
+        if (right.transform.Find("SiblingTrigger") != null)
+        {
+            right.transform.Find("SiblingTrigger").gameObject.SetActive(true);
+        }
+
         Block b = right.GetComponent<Block>();
 
         MeshFilter m = b.GetComponent<MeshFilter>();
 
         float offset = 0.0f;
 
-        switch (blockKind)
+        //Control
+        if (blockKind == BlockKind.FOR || blockKind == BlockKind.IF || blockKind == BlockKind.ELIF)
         {
-            //Control
-            case BlockKind.FOR:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
+            // 뒤에 붙일 수 있는 블록이면
+            if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
+                b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
+                b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
+                b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
+                b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
+                b.blockKind == BlockKind.BOP ||
+                b.blockKind == BlockKind.FUNC_GOLEMENERGY || b.blockKind == BlockKind.FUNC_OBSERVE)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    print(m.mesh.name);
-
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }  
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        print("왼쪽 블록이 잘못됨");
-
-                        //Destroy(right);
+                        //2.54 * 20 * 2
+                        offset = 101.6F;
                     }
+                    else if (m.mesh.name.Contains("SmallBlock"))
+                    {
+                        //2.54 * 20 * 1.5
+                        offset = 76.2F;
+                    }
+
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
+
+                    node.attachBlockRight(right.GetComponent<Block>());
+
+                    haveRight = true;
+                    b.inMiddle = true;
+                }
+                //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
+                else
+                {
+                    Destroy(right);
+                }
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Int and Bool Compare
+        else if (blockKind == BlockKind.EQ || blockKind == BlockKind.NEQ)
+        {
+            if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
+                b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
+                b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
+                b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
+                b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
+                b.blockKind == BlockKind.BOP ||
+                b.blockKind == BlockKind.FUNC_GOLEMENERGY || b.blockKind == BlockKind.FUNC_OBSERVE)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                {
+                    if (m.mesh.name.Contains("LongBlock1"))
+                    {
+                        offset = 76.2F;
+                    }
+                    else if (m.mesh.name.Contains("SmallBlock"))
+                    {
+                        offset = 50.8F;
+                    }
+
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
+
+                    node.attachBlockRight(right.GetComponent<Block>());
+
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    print("오른쪽에 붙일 수 있는 종류가 아님");
-    
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            case BlockKind.IF:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Int only Compare
+        //Int Calculate
+        //Negative Num
+        else if (blockKind == BlockKind.GT || blockKind == BlockKind.LT || blockKind == BlockKind.GE || blockKind == BlockKind.LE ||
+                 blockKind == BlockKind.PLUS || blockKind == BlockKind.MINUS || blockKind == BlockKind.MUL || blockKind == BlockKind.DIV || blockKind == BlockKind.MOD ||
+                 blockKind == BlockKind.NEG)
+        {
+            if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
+                b.blockKind == BlockKind.NEG ||
+                b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
+                b.blockKind == BlockKind.BOP ||
+                b.blockKind == BlockKind.FUNC_GOLEMENERGY || b.blockKind == BlockKind.FUNC_OBSERVE)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 76.2F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 50.8F;
                     }
+
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
+
+                    node.attachBlockRight(right.GetComponent<Block>());
+
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            case BlockKind.ELIF:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Logical
+        else if (blockKind == BlockKind.AND || blockKind == BlockKind.OR || blockKind == BlockKind.NOT)
+        {
+            if (b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
+                b.blockKind == BlockKind.NOT ||
+                b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
+                b.blockKind == BlockKind.BOP)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 76.2F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 50.8F;
                     }
+
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
+
+                    node.attachBlockRight(right.GetComponent<Block>());
+
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            //Int and Bool Compare
-            case BlockKind.EQ:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Bracket open
+        else if (blockKind == BlockKind.BOP)
+        {
+            if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
+                b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
+                b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
+                b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
+                b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
+                b.blockKind == BlockKind.BOP ||
+                b.blockKind == BlockKind.FUNC_GOLEMENERGY || b.blockKind == BlockKind.FUNC_OBSERVE)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 76.2F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 50.8F;
                     }
+
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
+
+                    node.attachBlockRight(right.GetComponent<Block>());
+
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            case BlockKind.NEQ:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Bracket close
+        else if (blockKind == BlockKind.BCL)
+        {
+            if (b.blockKind == BlockKind.COMMA ||
+                b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
+                b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
+                b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
+                b.blockKind == BlockKind.BCL)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 76.2F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 50.8F;
                     }
+
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
+
+                    node.attachBlockRight(right.GetComponent<Block>());
+
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            //Int only Compare
-            case BlockKind.GT:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.NEG ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Assignment
+        //Comma
+        else if (blockKind == BlockKind.ASS ||
+                 blockKind == BlockKind.COMMA)
+        {
+            if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
+                b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
+                b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
+                b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
+                b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
+                b.blockKind == BlockKind.BOP ||
+                b.blockKind == BlockKind.FUNC_GOLEMENERGY || b.blockKind == BlockKind.FUNC_OBSERVE)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 76.2F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 50.8F;
                     }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
 
-                break;
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
 
-            case BlockKind.LT:
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
 
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.NEG ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
+                    node.attachBlockRight(right.GetComponent<Block>());
 
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            case BlockKind.GE:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.NEG ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Const Int
+        else if (blockKind == BlockKind.CONSTI_0 || blockKind == BlockKind.CONSTI_1 || blockKind == BlockKind.CONSTI_2 || blockKind == BlockKind.CONSTI_3 || blockKind == BlockKind.CONSTI_4 || blockKind == BlockKind.CONSTI_5 || blockKind == BlockKind.CONSTI_6 || blockKind == BlockKind.CONSTI_7 || blockKind == BlockKind.CONSTI_8 || blockKind == BlockKind.CONSTI_9)
+        {
+            if (b.blockKind == BlockKind.COMMA ||
+                b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
+                b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
+                b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
+                b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
+                b.blockKind == BlockKind.BCL)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 76.2F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 50.8F;
                     }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
 
-                break;
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
 
-            case BlockKind.LE:
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
 
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.NEG ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
+                    node.attachBlockRight(right.GetComponent<Block>());
 
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            //Calculate
-            case BlockKind.PLUS:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.NEG ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Const Bool
+        else if (blockKind == BlockKind.CONSTB_TRUE || blockKind == BlockKind.CONSTB_FALSE)
+        {
+            if (b.blockKind == BlockKind.COMMA ||
+                b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
+                b.blockKind == BlockKind.AND || b.blockKind == BlockKind.OR ||
+                b.blockKind == BlockKind.BCL)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 76.2F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 50.8F;
                     }
+
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
+
+                    node.attachBlockRight(right.GetComponent<Block>());
+
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            case BlockKind.MINUS:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.NEG ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Int Variable
+        else if (blockKind == BlockKind.VARI_a || blockKind == BlockKind.VARI_b || blockKind == BlockKind.VARI_c || blockKind == BlockKind.VARI_i || blockKind == BlockKind.VARI_j || blockKind == BlockKind.VARI_k)
+        {
+            if (b.blockKind == BlockKind.COMMA ||
+                b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
+                b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
+                b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
+                b.blockKind == BlockKind.BCL ||
+                b.blockKind == BlockKind.ASS)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 76.2F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 50.8F;
                     }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
 
-                break;
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
 
-            case BlockKind.MUL:
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
 
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.NEG ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
+                    node.attachBlockRight(right.GetComponent<Block>());
 
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            case BlockKind.DIV:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.NEG ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Bool Variable
+        else if (blockKind == BlockKind.VARB_w || blockKind == BlockKind.VARB_x || blockKind == BlockKind.VARB_y || blockKind == BlockKind.VARB_z)
+        {
+            if (b.blockKind == BlockKind.COMMA ||
+                b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
+                b.blockKind == BlockKind.AND || b.blockKind == BlockKind.OR ||
+                b.blockKind == BlockKind.BCL ||
+                b.blockKind == BlockKind.ASS)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 76.2F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 50.8F;
                     }
+
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
+
+                    node.attachBlockRight(right.GetComponent<Block>());
+
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            case BlockKind.MOD:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.NEG ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        //Function
+        else if (blockKind == BlockKind.FUNC_MELEEATTACK || blockKind == BlockKind.FUNC_RANGEATTACK || blockKind == BlockKind.FUNC_DEFENCE || blockKind == BlockKind.FUNC_ENERGYCHARGE || blockKind == BlockKind.FUNC_BREAKSHIELD || blockKind == BlockKind.FUNC_REPAIR)
+        {
+            if (b.blockKind == BlockKind.BOP)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 101.6F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 76.2F;
                     }
+
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
+
+                    node.attachBlockRight(right.GetComponent<Block>());
+
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
+                    Destroy(right);
                 }
-
-                break;
-
-            //Negative Num
-            case BlockKind.NEG:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.NEG ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.BOP)
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+        else if ( blockKind == BlockKind.FUNC_OBSERVE || blockKind == BlockKind.FUNC_GOLEMENERGY)
+        {
+            if (b.blockKind == BlockKind.COMMA ||
+                b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
+                b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
+                b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
+                b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
+                b.blockKind == BlockKind.BCL)
+            {
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
                 {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
+                    if (m.mesh.name.Contains("LongBlock1"))
                     {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
+                        offset = 101.6F;
                     }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
+                    else if (m.mesh.name.Contains("SmallBlock"))
                     {
-                        //Destroy(right);
+                        offset = 76.2F;
                     }
+
+                    right.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offset, gameObject.transform.localPosition.y, gameObject.transform.localPosition.z);
+
+                    gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = b;
+
+                    node.attachBlockRight(right.GetComponent<Block>());
+
+                    haveRight = true;
+                    b.inMiddle = true;
                 }
                 else
                 {
-                    //Destroy(right);
-                }
-
-                break;
-
-            //Logical
-            case BlockKind.AND:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.OR:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.NOT:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            //Bracket
-            case BlockKind.BOP:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.BCL:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            //Assignment
-            case BlockKind.ASS:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-            //ETC
-            case BlockKind.COMMA:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.CONSTB_FALSE || b.blockKind == BlockKind.CONSTB_TRUE ||
-                    b.blockKind == BlockKind.NEG || b.blockKind == BlockKind.NOT ||
-                    b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
-                    b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
-                    b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            //Const Int
-            case BlockKind.CONSTI_0:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.CONSTI_1:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.CONSTI_2:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.CONSTI_3:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.CONSTI_4:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.CONSTI_5:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.CONSTI_6:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.CONSTI_7:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.CONSTI_8:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.CONSTI_9:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.CONSTI_0 || b.blockKind == BlockKind.CONSTI_1 || b.blockKind == BlockKind.CONSTI_2 || b.blockKind == BlockKind.CONSTI_3 || b.blockKind == BlockKind.CONSTI_4 || b.blockKind == BlockKind.CONSTI_5 || b.blockKind == BlockKind.CONSTI_6 || b.blockKind == BlockKind.CONSTI_7 || b.blockKind == BlockKind.CONSTI_8 || b.blockKind == BlockKind.CONSTI_9 ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            //Const Bool
-            case BlockKind.CONSTB_TRUE:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.AND || b.blockKind == BlockKind.OR ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.CONSTB_FALSE:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.AND || b.blockKind == BlockKind.OR ||
-                    b.blockKind == BlockKind.BCL)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            //Int Variable
-            case BlockKind.VARI_a:
-                
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL ||
-                    b.blockKind == BlockKind.ASS)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.VARI_b:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL ||
-                    b.blockKind == BlockKind.ASS)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.VARI_c:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL ||
-                    b.blockKind == BlockKind.ASS)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.VARI_i:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL ||
-                    b.blockKind == BlockKind.ASS)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.VARI_j:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL ||
-                    b.blockKind == BlockKind.ASS)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.VARI_k:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.GT || b.blockKind == BlockKind.LT || b.blockKind == BlockKind.GE || b.blockKind == BlockKind.LE ||
-                    b.blockKind == BlockKind.PLUS || b.blockKind == BlockKind.MINUS || b.blockKind == BlockKind.MUL || b.blockKind == BlockKind.DIV || b.blockKind == BlockKind.MOD ||
-                    b.blockKind == BlockKind.BCL ||
-                    b.blockKind == BlockKind.ASS)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            //Bool Variable
-            case BlockKind.VARB_w:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.AND || b.blockKind == BlockKind.OR ||
-                    b.blockKind == BlockKind.BCL ||
-                    b.blockKind == BlockKind.ASS)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.VARB_x:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.AND || b.blockKind == BlockKind.OR ||
-                    b.blockKind == BlockKind.BCL ||
-                    b.blockKind == BlockKind.ASS)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.VARB_y:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.AND || b.blockKind == BlockKind.OR ||
-                    b.blockKind == BlockKind.BCL ||
-                    b.blockKind == BlockKind.ASS)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.VARB_z:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.COMMA ||
-                    b.blockKind == BlockKind.EQ || b.blockKind == BlockKind.NEQ ||
-                    b.blockKind == BlockKind.AND || b.blockKind == BlockKind.OR ||
-                    b.blockKind == BlockKind.BCL ||
-                    b.blockKind == BlockKind.ASS)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02
-                            offset = 0.0508F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            //Function
-            case BlockKind.FUNC_MELEEATTACK:
-
-                //뒤에 붙일 수 있는 블록이면
-                if (b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.FUNC_RANGEATTACK:
-
-                if (b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.FUNC_OBSERVE:
-
-                if (b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.FUNC_DEFENCE:
-
-                if (b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.FUNC_ENERGYCHARGE:
-
-                if (b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.FUNC_BREAKSHIELD:
-
-                if (b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            case BlockKind.FUNC_REPAIR:
-
-                if (b.blockKind == BlockKind.BOP)
-                {
-                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("SmallBlock"))
-                    {
-                        if (m.mesh.name.Contains("LongBlock1"))
-                        {
-                            //2.54 * 0.02 * 2
-                            offset = 0.1016F;
-                        }
-                        else if (m.mesh.name.Contains("SmallBlock"))
-                        {
-                            //2.54 * 0.02 * 1.5
-                            offset = 0.0762F;
-                        }
-
-                        right.transform.position = new Vector3(gameObject.transform.position.x - offset, gameObject.transform.position.y, gameObject.transform.position.z);
-
-                        node.attachBlockRight(this, right.GetComponent<Block>());
-
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().attachable = false;
-                        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().detachable = true;
-                    }
-                    //LongBlock2, LongBlock3는 다른 것의 뒤에 올 수 없음
-                    else
-                    {
-                        //Destroy(right);
-                    }
-                }
-                else
-                {
-                    //Destroy(right);
-                }
-
-                break;
-
-            default :
-                //Destroy(right);
-                
-                break;
+                    Destroy(right);
+                }
+            }
+            else
+            {
+                Destroy(right);
+            }
+        }
+
+        else
+        {
+            Destroy(right);
         }
     }
 
-    public void childTrigger(GameObject child)
+    public void childTriggerIn(GameObject child)
     {
+        if (child.transform.Find("ChildTrigger") != null)
+        {
+            child.transform.Find("ChildTrigger").gameObject.SetActive(true);
+        }
+        if (child.transform.Find("RightTrigger") != null)
+        {
+            child.transform.Find("RightTrigger").gameObject.SetActive(true);
+        }
+        if (child.transform.Find("SiblingTrigger") != null)
+        {
+            child.transform.Find("SiblingTrigger").gameObject.SetActive(true);
+        }
+
+
         Block b = child.GetComponent<Block>();
 
         MeshFilter m = b.GetComponent<MeshFilter>();
 
         float offsetX = 0.0f;
 
-        //2.54 * 0.02
-        float offsetY = 0.0508f;
+        //2.54 * 20
+        float offsetY = 50.8f;
 
         if (b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
             b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
             b.blockKind == BlockKind.FOR || b.blockKind == BlockKind.IF ||
-            b.blockKind == BlockKind.FUNC_BREAKSHIELD || b.blockKind == BlockKind.FUNC_DEFENCE || b.blockKind == BlockKind.FUNC_ENERGYCHARGE || b.blockKind == BlockKind.FUNC_MELEEATTACK || b.blockKind == BlockKind.FUNC_OBSERVE || b.blockKind == BlockKind.FUNC_RANGEATTACK || b.blockKind == BlockKind.FUNC_REPAIR)
+            b.blockKind == BlockKind.FUNC_BREAKSHIELD || b.blockKind == BlockKind.FUNC_DEFENCE || b.blockKind == BlockKind.FUNC_ENERGYCHARGE || b.blockKind == BlockKind.FUNC_MELEEATTACK || b.blockKind == BlockKind.FUNC_OBSERVE || b.blockKind == BlockKind.FUNC_RANGEATTACK || b.blockKind == BlockKind.FUNC_REPAIR || b.blockKind == BlockKind.FUNC_GOLEMENERGY)
         {
             MeshFilter thisMesh = gameObject.GetComponent<MeshFilter>();
 
-            if (thisMesh.mesh.name.Contains("LongBlock2"))
+            if (thisMesh.mesh.name.Contains("LongBlock2") || thisMesh.mesh.name.Contains("LongBlock3"))
             {
-                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("LongBlock2"))
+                if (thisMesh.mesh.name.Contains("LongBlock2"))
                 {
-                    //2.54 * 0.02
-                    offsetX = 0.0508F;
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("LongBlock2"))
+                    {
+                        //2.54 * 20
+                        offsetX = 50.8F;
+                    }
+                    else if (m.mesh.name.Contains("SmallBlock"))
+                    {
+                        //2.54 * 20 * 0.5
+                        offsetX = 25.4F;
+                    }
                 }
-                else if (m.mesh.name.Contains("SmallBlock"))
+                else if (thisMesh.mesh.name.Contains("LongBlock3"))
                 {
-                    //2.54 * 0.02 * 0.5
-                    offsetX = 0.0254F;
+                    if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("LongBlock2"))
+                    {
+                        //2.54 * 20 * 1.25
+                        offsetX = 63.5F;
+                    }
+                    else if (m.mesh.name.Contains("SmallBlock"))
+                    {
+                        //2.54 * 20 * 0.75
+                        offsetX = 38.1F;
+                    }
                 }
-                child.transform.position = new Vector3(gameObject.transform.position.x - offsetX, gameObject.transform.position.y - offsetY, gameObject.transform.position.z);
+
+                child.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offsetX, gameObject.transform.localPosition.y - offsetY, gameObject.transform.localPosition.z);
+
+                gameObject.transform.Find("ChildTrigger").GetComponent<CTrigger>().childBlock = b;
 
                 node.attachBlockChild(b);
 
-                gameObject.transform.Find("ChildTrigger").GetComponent<CTrigger>().attachable = false;
-                gameObject.transform.Find("ChildTrigger").GetComponent<CTrigger>().detachable = true;
-
                 node.adjustSiblingTrigger();
-            }
-            else if (thisMesh.mesh.name.Contains("LongBlock3"))
-            {
-                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("LongBlock2"))
-                {
-                    //2.54 * 0.02 * 1.25
-                    offsetX = 0.0635F;
-                }
-                else if (m.mesh.name.Contains("SmallBlock"))
-                {
-                    //2.54 * 0.02 * 0.75
-                    offsetX = 0.0381F;
-                }
-                child.transform.position = new Vector3(gameObject.transform.position.x - offsetX, gameObject.transform.position.y - offsetY, gameObject.transform.position.z);
 
-                node.attachBlockChild(b);
-
-                gameObject.transform.Find("ChildTrigger").GetComponent<CTrigger>().attachable = false;
-                gameObject.transform.Find("ChildTrigger").GetComponent<CTrigger>().detachable = true;
-
-                node.adjustSiblingTrigger();
+                haveChild = true;
             }
             //LongBlock1과 SmallBlock인 블록은 자식을 가질 수 없다.
             else
             {
-                //Destroy(child);
+                Destroy(child);
             }
         }
         else
         {
-            //Destroy(child);
+            Destroy(child);
         }
     }
 
-    public void siblingTrigger(GameObject sibling)
+    public void siblingTriggerIn(GameObject sibling)
     {
+        if (sibling.transform.Find("ChildTrigger") != null)
+        {
+            sibling.transform.Find("ChildTrigger").gameObject.SetActive(true);
+        }
+        if (sibling.transform.Find("RightTrigger") != null)
+        {
+            sibling.transform.Find("RightTrigger").gameObject.SetActive(true);
+        }
+        if (sibling.transform.Find("SiblingTrigger") != null)
+        {
+            sibling.transform.Find("SiblingTrigger").gameObject.SetActive(true);
+        }
+
+
         Block b = sibling.GetComponent<Block>();
 
         MeshFilter m = b.GetComponent<MeshFilter>();
@@ -2789,347 +1003,219 @@ public class Block : MonoBehaviour
         float offsetX = 0.0f;
 
         //2.54 * 0.02
-        float offsetY = 0.0508f;
+        float offsetY = 50.8f;
 
         if (b.blockKind == BlockKind.VARI_a || b.blockKind == BlockKind.VARI_b || b.blockKind == BlockKind.VARI_c || b.blockKind == BlockKind.VARI_i || b.blockKind == BlockKind.VARI_j || b.blockKind == BlockKind.VARI_k ||
             b.blockKind == BlockKind.VARB_w || b.blockKind == BlockKind.VARB_x || b.blockKind == BlockKind.VARB_y || b.blockKind == BlockKind.VARB_z ||
             b.blockKind == BlockKind.FOR || b.blockKind == BlockKind.IF || b.blockKind == BlockKind.ELIF || b.blockKind == BlockKind.ELSE ||
-            b.blockKind == BlockKind.FUNC_BREAKSHIELD || b.blockKind == BlockKind.FUNC_DEFENCE || b.blockKind == BlockKind.FUNC_ENERGYCHARGE || b.blockKind == BlockKind.FUNC_MELEEATTACK || b.blockKind == BlockKind.FUNC_OBSERVE || b.blockKind == BlockKind.FUNC_RANGEATTACK || b.blockKind == BlockKind.FUNC_REPAIR)
+            b.blockKind == BlockKind.FUNC_BREAKSHIELD || b.blockKind == BlockKind.FUNC_DEFENCE || b.blockKind == BlockKind.FUNC_ENERGYCHARGE || b.blockKind == BlockKind.FUNC_MELEEATTACK || b.blockKind == BlockKind.FUNC_OBSERVE || b.blockKind == BlockKind.FUNC_RANGEATTACK || b.blockKind == BlockKind.FUNC_REPAIR || b.blockKind == BlockKind.FUNC_GOLEMENERGY)
         {
             MeshFilter thisMesh = gameObject.GetComponent<MeshFilter>();
 
             if (thisMesh.mesh.name.Contains("LongBlock1") || thisMesh.mesh.name.Contains("LongBlock2"))
             {
-                if (m.mesh.name.Contains("LongBlock1") || thisMesh.mesh.name.Contains("LongBlock2"))
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("LongBlock2"))
                 {
                     offsetX = 0.0f;
 
-                    //2.54 * 0.02 * height
-                    offsetY = 0.0508f * node.height();
+                    //2.54 * 20 * height
+                    offsetY = 50.8f * node.height();
                 }
                 else if (m.mesh.name.Contains("LongBlock3"))
                 {
-                    //2.54 8 0.02 * 0.25
-                    offsetX = -0.0127f;
+                    //2.54 * 20 * 0.25
+                    offsetX = -12.7f;
 
-                    //2.54 * 0.02 * height
-                    offsetY = 0.0508f * node.height();
+                    //2.54 * 20 * height
+                    offsetY = 50.8f * node.height();
                 }
                 else if (m.mesh.name.Contains("SmallBlock"))
                 {
-                    //2.54 8 0.02 * 0.5
-                    offsetX = -0.0254f;
+                    //2.54 * 20 * 0.5
+                    offsetX = -25.4f;
 
-                    //2.54 * 0.02 * height
-                    offsetY = 0.0508f * node.height();
+                    //2.54 * 20 * height
+                    offsetY = 50.8f * node.height();
                 }
                 else
                 {
-                    //Destroy(sibling);
+                    Destroy(sibling);
                 }
             }
             else if (thisMesh.mesh.name.Contains("LongBlock3"))
             {
-                if (m.mesh.name.Contains("LongBlock1") || thisMesh.mesh.name.Contains("LongBlock2"))
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("LongBlock2"))
                 {
-                    //2.54 8 0.02 * 0.25
-                    offsetX = 0.0127f;
+                    //2.54 * 20 * 0.25
+                    offsetX = 12.7f;
 
-                    //2.54 * 0.02 * height
-                    offsetY = 0.0508f * node.height();
+                    //2.54 * 20 * height
+                    offsetY = 50.8f * node.height();
                 }
                 else if (m.mesh.name.Contains("LongBlock3"))
                 {
-                    offsetX = 0;
+                    offsetX = 0.0f;
 
-                    //2.54 * 0.02 * height
-                    offsetY = 0.0508f * node.height();
+                    //2.54 * 20 * height
+                    offsetY = 50.8f * node.height();
                 }
                 else if (m.mesh.name.Contains("SmallBlock"))
                 {
-                    //2.54 8 0.02 * 0.25
-                    offsetX = -0.0127f;
+                    //2.54 * 20 * 0.25
+                    offsetX = -12.7f;
 
-                    //2.54 * 0.02 * height
-                    offsetY = 0.0508f * node.height();
+                    //2.54 * 20 * height
+                    offsetY = 50.8f * node.height();
                 }
                 else
                 {
-                    //Destroy(sibling);
+                    Destroy(sibling);
                 }
             }
             else if (thisMesh.mesh.name.Contains("SmallBlock"))
             {
-                if (m.mesh.name.Contains("LongBlock1") || thisMesh.mesh.name.Contains("LongBlock2"))
+                if (m.mesh.name.Contains("LongBlock1") || m.mesh.name.Contains("LongBlock2"))
                 {
-                    //2.54 8 0.02 * 0.5
-                    offsetX = 0.0254f;
+                    //2.54 * 20 * 0.5
+                    offsetX = 25.4f;
 
-                    //2.54 * 0.02 * height
-                    offsetY = 0.0508f * node.height();
+                    //2.54 * 20 * height
+                    offsetY = 50.8f * node.height();
                 }
                 else if (m.mesh.name.Contains("LongBlock3"))
                 {
-                    //2.54 8 0.02 * 0.25
-                    offsetX = 0.0127f;
+                    //2.54 * 20 * 0.25
+                    offsetX = 12.7f;
 
-                    //2.54 * 0.02 * height
-                    offsetY = 0.0508f * node.height();
+                    //2.54 * 20 * height
+                    offsetY = 50.8f * node.height();
                 }
                 else if (m.mesh.name.Contains("SmallBlock"))
                 {
                     offsetX = 0;
 
-                    //2.54 * 0.02 * height
-                    offsetY = 0.0508f * node.height();
+                    //2.54 * 20 * height
+                    offsetY = 50.8f * node.height();
                 }
                 else
                 {
-                    //Destroy(sibling);
+                    Destroy(sibling);
                 }
             }
             else
             {
-                //Destroy(sibling);
+                Destroy(sibling);
             }
 
-            sibling.transform.position = new Vector3(gameObject.transform.position.x - offsetX, gameObject.transform.position.y - offsetY, gameObject.transform.position.z);
-
-            gameObject.transform.Find("SiblingTrigger").GetComponent<STrigger>().attachable = false;
-            gameObject.transform.Find("SiblingTrigger").GetComponent<STrigger>().detachable = true;
+            sibling.transform.localPosition = new Vector3(gameObject.transform.localPosition.x + offsetX, gameObject.transform.localPosition.y - offsetY, gameObject.transform.localPosition.z);
+            
+            gameObject.transform.Find("SiblingTrigger").GetComponent<STrigger>().siblingBlock = b;
 
             node.attachBlockSibling(b);
 
+            node.adjustSiblingTrigger();
+
+            haveSibling = true;
         }
         else
         {
-            //Destroy(sibling);
+            Destroy(sibling);
         }
     }
-}
 
-/*
- switch (blockKind)
+    public void rightTriggerOut()
+    {
+        gameObject.transform.Find("RightTrigger").GetComponent<RTrigger>().rightBlock = null;
+
+        Block b = node.blocks[node.blocks.Count - 1];
+
+        if (b.transform.Find("ChildTrigger") != null)
         {
-            //META
-            case BlockKind.STARTHERE:
-                
-                break;
-
-            //Control
-            case BlockKind.FOR:
-                
-                break;
-
-            case BlockKind.IF:
-                
-                break;
-
-            case BlockKind.ELIF:
-                
-                break;
-
-            case BlockKind.ELSE:
-                
-                break;
-
-            //Int and Bool Compare
-            case BlockKind.EQ:
-                
-                break;
-
-            case BlockKind.NEQ:
-                
-                break;
-
-            //Int only Compare
-            case BlockKind.GT:
-                
-                break;
-            case BlockKind.LT:
-                
-                break;
-
-            case BlockKind.GE:
-                
-                break;
-
-            case BlockKind.LE:
-                
-                break;
-
-            //Calculate
-            case BlockKind.PLUS:
-                
-                break;
-            case BlockKind.MINUS:
-                
-                break;
-            case BlockKind.MUL:
-                
-                break;
-            case BlockKind.DIV:
-                
-                break;
-            case BlockKind.MOD:
-                
-                break;
-
-            //Negative Num
-            case BlockKind.NEG:
-                
-                break;
-
-            //Logical
-            case BlockKind.AND:
-                
-                break;
-
-            case BlockKind.OR:
-                
-                break;
-
-            case BlockKind.NOT:
-                
-                break;
-
-            //Bracket
-            case BlockKind.BOP:
-                
-                break;
-
-            case BlockKind.BCL:
-                
-                break;
-
-            //Assignment
-            case BlockKind.ASS:
-                
-                break;
-            //ETC
-            case BlockKind.COMMA:
-                
-                break;
-
-            //Const Int
-            case BlockKind.CONSTI_0:
-                
-                break;
-
-            case BlockKind.CONSTI_1:
-                
-                break;
-
-            case BlockKind.CONSTI_2:
-                
-                break;
-
-            case BlockKind.CONSTI_3:
-                
-                break;
-
-            case BlockKind.CONSTI_4:
-                
-                break;
-
-            case BlockKind.CONSTI_5:
-                
-                break;
-
-            case BlockKind.CONSTI_6:
-                
-                break;
-
-            case BlockKind.CONSTI_7:
-                
-                break;
-
-            case BlockKind.CONSTI_8:
-                
-                break;
-
-            case BlockKind.CONSTI_9:
-                
-                break;
-
-            //Const Bool
-            case BlockKind.CONSTB_TRUE:
-                
-                break;
-
-            case BlockKind.CONSTB_FALSE:
-                
-                break;
-
-            //Int Variable
-            case BlockKind.VARI_a:
-                
-                break;
-
-            case BlockKind.VARI_b:
-                
-                break;
-
-            case BlockKind.VARI_c:
-                
-                break;
-
-            case BlockKind.VARI_i:
-                
-                break;
-
-            case BlockKind.VARI_j:
-                
-                break;
-
-            case BlockKind.VARI_k:
-                
-                break;
-
-            //Bool Variable
-            case BlockKind.VARB_w:
-                
-                break;
-
-            case BlockKind.VARB_x:
-                
-                break;
-
-            case BlockKind.VARB_y:
-                
-                break;
-
-            case BlockKind.VARB_z:
-                
-                break;
-
-            //Function
-            case BlockKind.FUNC_MELEEATTACK:
-                
-                break;
-
-            case BlockKind.FUNC_RANGEATTACK:
-                
-                break;
-
-            case BlockKind.FUNC_OBSERVE:
-                
-                break;
-
-            case BlockKind.FUNC_DEFENCE:
-                
-                break;
-
-            case BlockKind.FUNC_ENERGYCHARGE:
-                
-                break;
-
-            case BlockKind.FUNC_BREAKSHIELD:
-                
-                break;
-
-            case BlockKind.FUNC_REPAIR:
-                
-                break;
+            b.transform.Find("ChildTrigger").gameObject.SetActive(false);
         }
-     */
+        if (b.transform.Find("RightTrigger") != null)
+        {
+            b.transform.Find("RightTrigger").gameObject.SetActive(false);
+        }
+        if (b.transform.Find("SiblingTrigger") != null)
+        {
+            b.transform.Find("SiblingTrigger").gameObject.SetActive(false);
+        }
+
+        b.inMiddle = false;
+
+        b.node = null;
+
+        node.golLangNode.line.keywords.RemoveAt(node.blocks.Count - 1);
+
+        node.blocks.RemoveAt(node.blocks.Count-1);
+
+        haveRight = false;
+    }
+
+    public void childTriggerOut()
+    {
+        gameObject.transform.Find("ChildTrigger").GetComponent<CTrigger>().childBlock = null;
+
+        Block b = node.children[0].blocks[0];
+
+        if (b.transform.Find("ChildTrigger") != null)
+        {
+            b.transform.Find("ChildTrigger").gameObject.SetActive(false);
+        }
+        if (b.transform.Find("RightTrigger") != null)
+        {
+            b.transform.Find("RightTrigger").gameObject.SetActive(false);
+        }
+        if (b.transform.Find("SiblingTrigger") != null)
+        {
+            b.transform.Find("SiblingTrigger").gameObject.SetActive(false);
+        }
+
+        node.children[0].parents = null;
+        node.children[0].golLangNode.parents = null;
+
+        node.children.RemoveAt(0);
+        node.golLangNode.children.RemoveAt(0);
+
+        haveChild = false;
+
+        node.adjustSiblingTrigger();
+    }
+
+    public void siblingTriggerOut()
+    {
+        gameObject.transform.Find("SiblingTrigger").GetComponent<STrigger>().siblingBlock = null;
+
+        Block b = node.parents.children[node.parents.children.Count - 1].blocks[0];
+
+        if (b.transform.Find("ChildTrigger") != null)
+        {
+            b.transform.Find("ChildTrigger").gameObject.SetActive(false);
+        }
+        if (b.transform.Find("RightTrigger") != null)
+        {
+            b.transform.Find("RightTrigger").gameObject.SetActive(false);
+        }
+        if (b.transform.Find("SiblingTrigger") != null)
+        {
+            b.transform.Find("SiblingTrigger").gameObject.SetActive(false);
+        }
+
+        node.parents.children[node.parents.children.Count - 1].parents = null;
+        node.parents.children[node.parents.children.Count - 1].golLangNode.parents = null;
+
+        node.parents.children[node.parents.children.Count - 1].leftSibling = null;
+        node.parents.children[node.parents.children.Count - 1].golLangNode.leftSibling = null;
+
+        node.parents.children.RemoveAt(node.parents.children.Count - 1);
+        node.parents.golLangNode.children.RemoveAt(node.parents.golLangNode.children.Count - 1);
+
+        node.rightSibling = null;
+        node.golLangNode.rightSibling = null;
+
+        haveSibling = false;
+
+        node.adjustSiblingTrigger();
+    }
+}

@@ -23,17 +23,17 @@ public class GrabBlock : MonoBehaviour
     {
         if (triggerAction.GetStateDown(handType))
         {
-            Debug.Log("Trigger Down");
+            //Debug.Log("Trigger Down");
             if(CollidingObject)
             {
-                Debug.Log("Grab");
+                //Debug.Log("Grab");
                 GrabObject();
             }
         }
 
         if(triggerAction.GetStateUp(handType))
         {
-            Debug.Log("Trigger Up");
+            //Debug.Log("Trigger Up");
             if(objectInHand)
             {
                 ReleaseObject();
@@ -43,7 +43,7 @@ public class GrabBlock : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collid " + other.name);
+        //Debug.Log("Collid " + other.name);
         SetCollidingObject(other);
     }
 
@@ -64,6 +64,13 @@ public class GrabBlock : MonoBehaviour
 
     private void SetCollidingObject(Collider col)
     {
+        Block b = col.GetComponent<Block>();
+
+        if (b == null || b.haveChild || b.haveSibling || b.haveRight)
+        {
+            return;
+        }
+
         if(CollidingObject || !col.GetComponent<Rigidbody>())
         {
             return;

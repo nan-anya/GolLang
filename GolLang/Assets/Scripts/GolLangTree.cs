@@ -13,6 +13,11 @@ public class GolLangTree : IEnumerable
         head = null;
     }
 
+    public GolLangTree(GolLangNode head)
+    {
+        this.head = head;
+    }
+
     //전위 순회 Enumerator
     public IEnumerator GetEnumerator()
     {

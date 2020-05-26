@@ -4,15 +4,35 @@ using UnityEngine;
 
 public class BlockManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public EditorNode firstLine;
+
+    public GolLangInterpreter interpreter;
+    
+    //Battle
+
+
+
+    public void Start()
     {
-        
+        interpreter = transform.GetComponent<GolLangInterpreter>();
+
+        interpreter.monster = GameObject.Find("Enemy").GetComponent<Monster>();
+
+        interpreter.golem = GameObject.Find("Golem").GetComponent<Golem>();
+
+        Block b = transform.Find("StartHere").GetComponent<Block>();
+
+        b.initBlock(Block.BlockKind.STARTHERE);
+
+        firstLine = new EditorNode(b);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void run()
     {
-        
+        interpreter.gTree.head = firstLine.golLangNode;
+
+        StartCoroutine(interpreter.interpret());
     }
+
+    
 }

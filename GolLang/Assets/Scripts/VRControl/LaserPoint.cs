@@ -103,7 +103,7 @@ public class LaserPoint : MonoBehaviour
             {
                 hitPoint = hit.point;
                 canTeleport = CheckTeleport(hit);
-                Debug.Log(hit.collider.name);
+                //Debug.Log(hit.collider.name);
             }
             else
             {
@@ -141,20 +141,20 @@ public class LaserPoint : MonoBehaviour
 
         if (teleportAction.GetStateUp(handType) && canTeleport)
         {
-            Debug.Log("TELEPORT");
+            //Debug.Log("TELEPORT");
             Teleport();
         }
     }
 
     private bool CheckTeleport(RaycastHit hit)
     {
-        Debug.Log(LayerMask.NameToLayer("CanTeleport") + " now");
+        //Debug.Log(LayerMask.NameToLayer("CanTeleport") + " now");
         return (CheckLayer(hit) == LayerMask.NameToLayer("CanTeleport")) ;
     }
 
     private int CheckLayer(RaycastHit hit)
     {
-        Debug.Log("Layer : " + hit.collider.gameObject.layer);
+        //Debug.Log("Layer : " + hit.collider.gameObject.layer);
         return hit.collider.gameObject.layer;
     }
 
@@ -174,7 +174,7 @@ public class LaserPoint : MonoBehaviour
     
     private void Teleport()
     {
-        Debug.Log("Teleport");
+        //Debug.Log("Teleport");
 
         canTeleport = false;
         reticle.SetActive(false);

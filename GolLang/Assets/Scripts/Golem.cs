@@ -6,65 +6,156 @@ public class Golem : MonoBehaviour
 {
     private Animator animator;
 
-    enum AttackType
-    {
-        Attack01, Attack02
-    };
+    bool aniEnd = false;
+
+    //max = 3
+    public int HP;
+
+    //max = 3
+    public int AP;
 
     // Start is called before the first frame update
     void Start()
     {
+        HP = 3;
+
+        AP = 3;
+
         animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            Die();
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            Attack(AttackType.Attack01);
+            print("A");
+            StartCoroutine(die_Coroutine());
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            Attack(AttackType.Attack02);
+            print("S");
+            StartCoroutine(attack_Coroutine());
         }
-        else if (Input.GetKeyDown(KeyCode.H))
+        else if (Input.GetKeyDown(KeyCode.D))
         {
-            Hit();
+            print("D");
+            StartCoroutine(hit_Coroutine());
         }
-        else if(Input.GetKeyDown(KeyCode.V))
+        else if(Input.GetKeyDown(KeyCode.F))
         {
-            Victory();
-        }
-    }
-    void Attack(AttackType Type)
-    {
-        if (Type == AttackType.Attack01)
-        {
-            animator.SetTrigger("Attack01");
-        }
-        else if (Type == AttackType.Attack02)
-        {
-            animator.SetTrigger("Attack02");
+            print("F");
+            StartCoroutine(victory_Coroutine());
         }
     }
 
-    void Hit()
+    public void animationEnded()
     {
-        animator.SetTrigger("Hit");
+        aniEnd = true;
     }
 
-    void Die()
+    public void attack()
+    {
+        StartCoroutine(attack_Coroutine());
+    }
+
+    public void hit()
+    {
+        StartCoroutine(hit_Coroutine());
+    }
+
+    public void defence()
+    {
+        StartCoroutine(defence_Coroutine());
+    }
+
+    public void die()
+    {
+        StartCoroutine(die_Coroutine());
+    }
+
+    public void victory()
+    {
+        StartCoroutine(victory_Coroutine());
+    }
+
+    public IEnumerator attack_Coroutine()
+    {
+        animator.SetTrigger("Attack");
+        aniEnd = false;
+
+        while (!aniEnd)
+        {
+            yield return null;
+        }
+
+        animator.SetTrigger("Idle");
+    }
+
+    public IEnumerator hit_Coroutine()
+    {
+        animator.SetTrigger("GetHit");
+
+        aniEnd = false;
+
+        while (!aniEnd)
+        {
+            yield return null;
+        }
+
+        animator.SetTrigger("Idle");
+    }
+    
+    public IEnumerator defence_Coroutine()
+    {
+        transform.Find("Shield").gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(1.5f);
+
+        transform.Find("Shield").gameObject.SetActive(false);
+
+        animator.SetTrigger("Idle");
+    }
+
+    public IEnumerator die_Coroutine()
     {
         animator.SetTrigger("Die");
-    }
+        aniEnd = false;
 
-    void Victory()
+        while (!aniEnd)
+        {
+            yield return null;
+        }
+
+        animator.SetTrigger("Idle");
+    }
+    
+    public IEnumerator victory_Coroutine()
     {
         animator.SetTrigger("Victory");
+
+        yield return null;
+    }
+
+    public void getAP()
+    {
+        if (AP <= 2)
+        {
+            AP++;
+        }
+    }
+
+    public void getDamage(int damage)
+    {
+        HP -= damage;
+    }
+
+    public void reset()
+    {
+        AP = 0;
+
+        HP = 3;
+
+        animator.SetTrigger("Idle");
     }
 }

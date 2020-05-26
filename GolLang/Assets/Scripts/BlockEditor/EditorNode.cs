@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using UnityEngine;
 
-public class EditorNode : MonoBehaviour
+public class EditorNode
 {
     public GolLangNode golLangNode;
 
@@ -17,7 +17,7 @@ public class EditorNode : MonoBehaviour
 
     public List<EditorNode> children;
 
-    public void Start()
+    public EditorNode()
     {
         golLangNode = new GolLangNode(new GolLangLine());
 
@@ -32,49 +32,69 @@ public class EditorNode : MonoBehaviour
         children = new List<EditorNode>();
     }
 
-    public void attachBlockRight(Block left, Block right)
+    public EditorNode(Block firstBlock)
     {
-        int leftIndex = golLangNode.line.keywords.IndexOf(left.keyword);
+        golLangNode = new GolLangNode(new GolLangLine());
 
+
+
+        golLangNode.line.keywords.Add(firstBlock.keyword);
+
+        blocks = new List<Block>();
+        blocks.Add(firstBlock);
+
+        firstBlock.node = this;
+
+        parents = null;
+
+        leftSibling = null;
+
+        rightSibling = null;
+
+        children = new List<EditorNode>();
+    }
+
+    public void attachBlockRight(Block right)
+    {
         right.node = this;
 
-        blocks.Insert(leftIndex + 1, right);
+        blocks.Add(right);
 
-        golLangNode.line.keywords.Insert(leftIndex + 1, right.keyword);
+        golLangNode.line.keywords.Add(right.keyword);
     }
 
     public void attachBlockChild(Block child)
     {
-        GameObject childNode = Instantiate(Resources.Load("Prefabs/FinalPrefabs/Others/EditorNode")) as GameObject;
+        EditorNode childEditorNode = new EditorNode(child);
 
-        EditorNode childEditorNode = childNode.GetComponent<EditorNode>();
-
-        childEditorNode.blocks.Add(child);
-        childEditorNode.golLangNode.line.keywords.Add(child.keyword);
-       
         childEditorNode.parents = this;
-        this.children.Add(childEditorNode);
+        children.Add(childEditorNode);
+
+        golLangNode.addChild(childEditorNode.golLangNode);
     }
 
     public void attachBlockSibling(Block sibling)
     {
-        GameObject siblingNode = Instantiate(Resources.Load("Prefabs/FinalPrefabs/Others/EditorNode")) as GameObject;
-
-        EditorNode siblingEditorNode = siblingNode.GetComponent<EditorNode>();
-
-        siblingEditorNode.blocks.Add(sibling);
-        siblingEditorNode.golLangNode.line.keywords.Add(sibling.keyword);
+        EditorNode siblingEditorNode = new EditorNode(sibling);
 
         siblingEditorNode.leftSibling = this;
-        this.rightSibling = siblingEditorNode;
+        rightSibling = siblingEditorNode;
+
+        siblingEditorNode.parents = parents;
+        parents.children.Add(siblingEditorNode);
+
+        parents.golLangNode.addChild(siblingEditorNode.golLangNode);
     }
+    
     public void adjustSiblingTrigger()
     {
         Transform head = blocks[0].gameObject.transform.Find("SiblingTrigger");
 
-        if (head != null)
+        MeshFilter m = blocks[0].gameObject.GetComponent<MeshFilter>();//.mesh.name.Contains("LongBlock2");
+
+        if (head != null && m.mesh.name.Contains("LongBlock2"))
         {
-            head.position = new Vector3(1.905F, -2.54F * height(), 0);
+            head.localPosition = new Vector3(head.localPosition.x, -2.54F * height(), 0);
         }
         if (parents != null)
         {
@@ -89,6 +109,11 @@ public class EditorNode : MonoBehaviour
         foreach (EditorNode i in children)
         {
             h += i.height();
+        }
+
+        if (blocks[0].gameObject.GetComponent<MeshFilter>().mesh.name.Contains("LongBlock2"))
+        {
+            return h + 1;
         }
 
         return h;
