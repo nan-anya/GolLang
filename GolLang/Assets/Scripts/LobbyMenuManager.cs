@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class LobbyMenuManager : MonoBehaviour
 {
-    public static GameManager instance;
-
     GameState gameState;
 
-    public GameObject Golem;
-    public GameObject Player;
+    //public GameObject Golem;
+    //public GameObject Player;
 
     public enum GameState
     {
@@ -48,6 +46,7 @@ public class LobbyMenuManager : MonoBehaviour
         //SetGameState(GameState.InGame);
     }
 
+    /*
     public void TeleportPlayer()
     {
         Vector3 dir = Golem.transform.forward * -1;
@@ -59,7 +58,7 @@ public class LobbyMenuManager : MonoBehaviour
         DisableLeftController();
         MagicCircleRender();
     }
-
+    */
 
     public void DisableLeftController()
     {

@@ -5,7 +5,7 @@
       "app_key": "application.generated.unity.gollang.exe",
       "launch_type": "url",
       "url": "steam://launch/",
-      "action_manifest_path": "D:\\GolLang\\GolLang\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "action_manifest_path": "D:\\Unity\\GolLang\\GolLang\\Assets\\StreamingAssets\\SteamVR\\actions.json",
       "strings": {
         "en_us": {
           "name": "GolLang [Testing]"
